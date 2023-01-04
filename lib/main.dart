@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
 
         builder: (context,c){
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: Theme.of(context).copyWith(
 

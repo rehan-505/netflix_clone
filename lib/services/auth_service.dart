@@ -13,10 +13,10 @@ class AuthService {
   }
 
 
-  Future<bool> signUpWithEmailAndPass(var email,String pass, {String? name}) async{
+  Future<bool> signUpWithEmailAndPass(String email,String pass, {String? name}) async{
 
     await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(email: email, password: pass).then((value) => value.user?.updateDisplayName(name));
+        .createUserWithEmailAndPassword(email: email, password: pass);
     return FirebaseAuth.instance.currentUser!=null;
 
   }

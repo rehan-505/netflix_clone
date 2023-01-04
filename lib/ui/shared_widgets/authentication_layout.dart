@@ -7,10 +7,12 @@ import 'package:netflix_clone/ui/shared_widgets/custom_button.dart';
 import '../common/app_styles.dart';
 
 class AuthenticationLayout extends StatelessWidget {
-  const AuthenticationLayout({Key? key, this.onBackPressed, this.form, this.onMainButtonPressed, this.busy = false, required this.mainButtonTitle, required this.authScreenType,  this.alternateText, this.showTerms = false, this.validationMsg}) : super(key: key);
+  const AuthenticationLayout({Key? key, this.onBackPressed, this.form, this.onMainButtonPressed, this.busy = false, required this.mainButtonTitle, required this.authScreenType,  this.alternateText, this.showTerms = false, this.validationMsg, this.onAlternateTextTapped}) : super(key: key);
 
   final void Function()? onBackPressed;
   final void Function()? onMainButtonPressed;
+  final void Function()? onAlternateTextTapped;
+
   final AuthScreenType authScreenType;
   final String mainButtonTitle;
   final bool busy;
@@ -55,7 +57,9 @@ class AuthenticationLayout extends StatelessWidget {
                 SizedBox(height: 50.h,),
                 if(alternateText!=null) Padding(
                   padding: EdgeInsets.only(bottom: 50.h),
-                  child: Text(alternateText!, style: white70Style16w600,),
+                  child: InkWell(
+                      onTap: onAlternateTextTapped,
+                      child: Text(alternateText!, style: white70Style16w600,)),
                 ),
                 if(showTerms)  Text( "By signing ${ isLogin() ? "in" : "up"} you agree with our terms and conditions. ", style: subtitleStyle,),
               ],

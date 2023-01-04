@@ -4,22 +4,22 @@ import 'package:netflix_clone/enums/auth_screen_type.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/shared_widgets/authentication_layout.dart';
 import 'package:netflix_clone/ui/shared_widgets/custom_text_field.dart';
+import 'package:netflix_clone/ui/views/signup/signup_viewmodel.dart';
 import 'package:stacked/stacked.dart';
 
-import 'login_viewmodel.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+class SignupView extends StatelessWidget {
+  const SignupView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.reactive(
-      viewModelBuilder: () => LoginViewModel(),
+    return ViewModelBuilder<SignupViewModel>.reactive(
+      viewModelBuilder: () => SignupViewModel(),
       builder: (context, model, child) => Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: kcBackgroundColor,
         body: AuthenticationLayout(
-          mainButtonTitle: "Sign In",
-          authScreenType: AuthScreenType.login,
+          mainButtonTitle: "Sign Up",
+          authScreenType: AuthScreenType.signup,
           onMainButtonPressed: model.saveData,
           onBackPressed: () {},
           busy: model.isBusy,
@@ -62,9 +62,9 @@ class LoginView extends StatelessWidget {
             ],
           ),
           showTerms: true,
-          alternateText: "New to Netflix? Sign up now.",
+          alternateText: "Already have an account? Login now.",
           validationMsg: model.validationMessage,
-          onAlternateTextTapped: model.navigateToSignUp,
+          onAlternateTextTapped: model.navigateToLogin,
 
         ),
       ),

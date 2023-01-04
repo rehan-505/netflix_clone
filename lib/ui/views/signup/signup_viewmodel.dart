@@ -5,8 +5,8 @@ import '../../../app/app.router.dart';
 import '../../../utils/global_functions.dart';
 import '../../base/authentication_viewmodel.dart';
 
-class LoginViewModel extends AuthenticationViewModel{
-  LoginViewModel() : super();
+class SignupViewModel extends AuthenticationViewModel {
+  SignupViewModel() : super();
 
 
   bool passVisible = true;
@@ -45,13 +45,13 @@ class LoginViewModel extends AuthenticationViewModel{
       return false;
     }
 
-    if(await authService.signInWithEmailAndPass(emailController.text, passController.text)){
+    if(await authService.signUpWithEmailAndPass(emailController.text, passController.text)){
       navigationService.navigateTo(Routes.splashView);
     }
   }
 
-  void navigateToSignUp() =>
-      navigationService.replaceWith(Routes.signupView);
+  void navigateToLogin() =>
+      navigationService.replaceWith(Routes.loginView);
 
   void navigateToForgotPass() =>
       navigationService.navigateTo(Routes.splashView);
@@ -97,4 +97,3 @@ class LoginViewModel extends AuthenticationViewModel{
 
 
 }
-
