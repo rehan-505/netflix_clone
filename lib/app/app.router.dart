@@ -6,7 +6,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/ui/views/home/home_view.dart' as _i3;
+import 'package:netflix_clone/ui/views/splash/splash_view.dart' as _i3;
 import 'package:netflix_clone/ui/views/startup/startup_view.dart' as _i2;
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i4;
@@ -14,11 +14,11 @@ import 'package:stacked_services/stacked_services.dart' as _i4;
 class Routes {
   static const startupView = '/startup-view';
 
-  static const homeView = '/home-view';
+  static const splashView = '/';
 
   static const all = <String>{
     startupView,
-    homeView,
+    splashView,
   };
 }
 
@@ -29,8 +29,8 @@ class StackedRouter extends _i1.RouterBase {
       page: _i2.StartupView,
     ),
     _i1.RouteDef(
-      Routes.homeView,
-      page: _i3.HomeView,
+      Routes.splashView,
+      page: _i3.SplashView,
     ),
   ];
 
@@ -41,9 +41,9 @@ class StackedRouter extends _i1.RouterBase {
         settings: data,
       );
     },
-    _i3.HomeView: (data) {
+    _i3.SplashView: (data) {
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i3.HomeView(),
+        builder: (context) => const _i3.SplashView(),
         settings: data,
       );
     },
@@ -70,14 +70,14 @@ extension NavigatorStateExtension on _i4.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToHomeView([
+  Future<dynamic> navigateToSplashView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   ]) async {
-    return navigateTo<dynamic>(Routes.homeView,
+    return navigateTo<dynamic>(Routes.splashView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -98,14 +98,14 @@ extension NavigatorStateExtension on _i4.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithHomeView([
+  Future<dynamic> replaceWithSplashView([
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
   ]) async {
-    return replaceWith<dynamic>(Routes.homeView,
+    return replaceWith<dynamic>(Routes.splashView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
