@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
-import 'package:netflix_clone/ui/views/on_boarding/on_boarding_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -46,7 +45,7 @@ class MyApp extends StatelessWidget {
               focusColor: kcPrimaryColor,
               textTheme: GoogleFonts.poppinsTextTheme(),
             ),
-            home: const OnBoardingView(),
+            // home: const OnBoardingView(),
             // initialRoute: Routes.onBoardingView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,

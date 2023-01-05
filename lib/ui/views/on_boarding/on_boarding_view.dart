@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
 import 'package:stacked/stacked.dart';
 import '../../common/app_colors.dart';
+import 'on_boarding_constants.dart';
 import 'on_boarding_viewmodel.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -26,9 +27,9 @@ class OnBoardingView extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return _buildLayout(context, index,
                         model,
-                        titleText: model.titlesList[index],
-                        subtitle: model.subtitles[index],
-                        imgPath: model.images[index],);
+                        titleText: OnBoardingConstants.titlesList[index],
+                        subtitle: OnBoardingConstants.subtitles[index],
+                        imgPath: OnBoardingConstants.images[index],);
                   }),
 
               Positioned(

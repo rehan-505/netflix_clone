@@ -10,7 +10,6 @@ import 'package:netflix_clone/ui/views/login/login_view.dart' as _i4;
 import 'package:netflix_clone/ui/views/on_boarding/on_boarding_view.dart'
     as _i6;
 import 'package:netflix_clone/ui/views/signup/signup_view.dart' as _i5;
-import 'package:netflix_clone/ui/views/splash/splash_view.dart' as _i3;
 import 'package:netflix_clone/ui/views/startup/startup_view.dart' as _i2;
 import 'package:stacked/stacked.dart' as _i1;
 import 'package:stacked_services/stacked_services.dart' as _i7;
@@ -42,10 +41,6 @@ class StackedRouter extends _i1.RouterBase {
       page: _i2.StartupView,
     ),
     _i1.RouteDef(
-      Routes.splashView,
-      page: _i3.SplashView,
-    ),
-    _i1.RouteDef(
       Routes.loginView,
       page: _i4.LoginView,
     ),
@@ -63,12 +58,6 @@ class StackedRouter extends _i1.RouterBase {
     _i2.StartupView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const _i2.StartupView(),
-        settings: data,
-      );
-    },
-    _i3.SplashView: (data) {
-      return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i3.SplashView(),
         settings: data,
       );
     },
