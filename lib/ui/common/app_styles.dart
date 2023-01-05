@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
 
@@ -8,14 +9,16 @@ const TextStyle heading1Style = TextStyle(
   fontWeight: FontWeight.w400,
 );
 
-const TextStyle heading2Style = TextStyle(
-  fontSize: 28,
-  fontWeight: FontWeight.w600,
+TextStyle heading2Style = TextStyle(
+  fontSize: 28.sp,
+    fontWeight: FontWeight.w700,
+    color: Colors.white
 );
 
-const TextStyle heading3Style = TextStyle(
-  fontSize: 24,
-  fontWeight: FontWeight.w600,
+ TextStyle heading3Style = TextStyle(
+  fontSize: 20.sp,
+    fontWeight: FontWeight.w700,
+    color: Colors.white
 );
 
 
@@ -25,9 +28,10 @@ const TextStyle heading4Style = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
-const TextStyle headlineStyle = TextStyle(
-  fontSize: 30,
+TextStyle headlineStyle = TextStyle(
+  fontSize: 32.sp,
   fontWeight: FontWeight.w700,
+  color: Colors.white
 );
 
 const TextStyle bodyStyle = TextStyle(
@@ -35,19 +39,21 @@ const TextStyle bodyStyle = TextStyle(
   fontWeight: FontWeight.w100,
 );
 
+const TextStyle bodyStyleWhite70 = TextStyle(
+  fontSize: 16,
+  color: Colors.white70
+);
+
+
 TextStyle greyBodyStyle16 = TextStyle(
   fontSize: 16,
   color: kcSubtitleGreyColor.withOpacity(0.75)
-  // fontWeight: FontWeight.w100,
-
 );
 
 TextStyle white70Style16w600 = const TextStyle(
     fontSize: 16,
     color: Colors.white70,
     fontWeight: FontWeight.w600
-  // fontWeight: FontWeight.w100,
-
 );
 
 

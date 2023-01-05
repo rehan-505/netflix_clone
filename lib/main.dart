@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
-import 'package:netflix_clone/ui/setup/setup_bottom_sheet_ui.dart';
-import 'package:netflix_clone/ui/setup/setup_dialog_ui.dart';
+import 'package:netflix_clone/ui/views/on_boarding/on_boarding_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:google_fonts/google_fonts.dart';
 import 'app/app.router.dart';
 
 void main() async{
@@ -44,13 +43,11 @@ class MyApp extends StatelessWidget {
 
               primaryColor: kcPrimaryColor,
               backgroundColor: kcBackgroundColor,
-
               focusColor: kcPrimaryColor,
-              textTheme: Theme.of(context).textTheme.apply(
-                bodyColor: Colors.black,
-              ),
+              textTheme: GoogleFonts.poppinsTextTheme(),
             ),
-            initialRoute: Routes.loginView,
+            home: const OnBoardingView(),
+            // initialRoute: Routes.onBoardingView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,
           );
