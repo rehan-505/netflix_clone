@@ -1,11 +1,9 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/ui/views/home/home_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
-import '../slivers.dart';
+import '../../common/app_styles.dart';
 import 'dashboard_viewmodel.dart';
 
 class DashboardView extends StatelessWidget {
@@ -62,7 +60,7 @@ class DashboardView extends StatelessWidget {
       icon: Icon(index == model.controller.index ? iconData1 : iconData2),
       title: title, activeColorPrimary: Colors.white,
       inactiveColorPrimary: Colors.grey,
-      textStyle: TextStyle(color: Colors.white,fontSize: 10.sp)
+      textStyle: captionStyle10
 
     );
   }
