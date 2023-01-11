@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:netflix_clone/app/app.locator.dart';
+import 'package:netflix_clone/app/app.router.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../../utils/global_functions.dart';
 import '../../common/app_colors.dart';
+import '../../common/app_styles.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
@@ -144,10 +148,7 @@ class HomeView extends StatelessWidget {
                               Container(
                                 child: Text(
                                   "Play",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.sp),
+                                  style: blackStyle15Bold,
                                 ),
                               ),
                             ],
@@ -177,10 +178,7 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.only(left: 10.w),
           child: Text(
             categoryName,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold),
+            style: heading3Style,
           ),
         ),
         10.verticalSpace,
@@ -192,6 +190,9 @@ class HomeView extends StatelessWidget {
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: (){
+
+                    // final navigationService = locator<NavigationService>();
+                    // navigationService.navigateToVideoPlayerScreenView();
                     showBottomSheet(context);
                     // model.showBottomSheet();
                   },
@@ -228,8 +229,7 @@ class HomeView extends StatelessWidget {
         5.verticalSpace,
         Text(
           title,
-          style: TextStyle(
-              color: Colors.white, fontSize: 11, fontWeight: FontWeight.w200),
+          style: captionStyle11,
         )
       ],
     );
@@ -272,19 +272,19 @@ class HomeView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
-                          Text("1899", style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),),
+                          Text("1899", style: heading3Style,),
                           5.verticalSpace,
                           Row(
                             children: [
-                              const Text("2022", style: TextStyle(fontSize: 12, color: Colors.grey),),
+                              Text("2022", style: captionStyleGrey,),
                               10.horizontalSpace,
-                              const Text("16+",style: TextStyle(fontSize: 12, color: Colors.grey),),
+                              Text("16+",style: captionStyleGrey,),
                               10.horizontalSpace,
-                              const Text("18 Episodes",style: TextStyle(fontSize: 12, color: Colors.grey),),
+                              Text("18 Episodes",style: captionStyleGrey,),
                             ],
                           ),
                          5.verticalSpace,
-                          Text("dummy "*20, style: TextStyle(color: Colors.white,fontSize: 12),)
+                          Text("dummy "*20, style: captionStyleGrey.copyWith(color: Colors.white),)
                         ],
                       )
                    ),
@@ -308,11 +308,11 @@ class HomeView extends StatelessWidget {
               ),
               Row(
                 children: [
-                  Icon(Icons.info_outline, color: Colors.white,),
+                  const Icon(Icons.info_outline, color: Colors.white,),
                   10.horizontalSpace,
-                  Text("Details & Info"),
-                  Spacer(),
-                  Icon(Icons.arrow_forward_ios,color: Colors.white)
+                  const Text("Details & Info"),
+                  const Spacer(),
+                  const Icon(Icons.arrow_forward_ios,color: Colors.white)
                 ],
               ),
               20.verticalSpace
@@ -336,7 +336,7 @@ class HomeView extends StatelessWidget {
           child: Icon(iconData, color: iconColor ?? Colors.white,),
         ),
         4.verticalSpace,
-        Text(title, style: TextStyle(color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.w100),)
+        Text(title, style: captionStyleGrey.copyWith(fontWeight: FontWeight.w100),)
       ],
     );
   }
