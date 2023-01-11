@@ -4,11 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../common/app_colors.dart';
 
 class CustomButton extends StatelessWidget {
-  const CustomButton({Key? key, required this.mainButtonTitle, required this.busy, this.onPressed}) : super(key: key);
+  const CustomButton({Key? key, required this.mainButtonTitle, required this.busy, this.onPressed, this.borderRadius}) : super(key: key);
 
   final String mainButtonTitle;
   final bool busy;
   final void Function()? onPressed;
+  final BorderRadius? borderRadius;
+
 
 
   @override
@@ -23,7 +25,7 @@ class CustomButton extends StatelessWidget {
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white),
           color: kcBackgroundColor,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: borderRadius ?? BorderRadius.circular(8),
         ),
         child: busy
             ? const CircularProgressIndicator(
