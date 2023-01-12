@@ -75,12 +75,24 @@ class SearchView extends StatelessWidget {
       color: Colors.grey[900],
       child: Row(
         children: [
-          Image.asset(
-            "assets/images/mini_poster/img_1.png",
+          Container(
             height: 80.h,
             width: 120.w,
-            fit: BoxFit.cover,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+              image: AssetImage("assets/images/mini_poster/stranger_things.png"),
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter
+              ),
+
+            ),
           ),
+          // Image.asset(
+          //   "assets/images/mini_poster/stranger_things.png",
+          //   height: 80.h,
+          //   width: 120.w,
+          //   fit: BoxFit.cover,
+          // ),
           13.horizontalSpace,
           const Text("The Notebook",
             // style: TextStyle(fontSize: 16.sp),

@@ -46,7 +46,7 @@ class SignupViewModel extends AuthenticationViewModel {
     }
 
     if(await authService.signUpWithEmailAndPass(emailController.text, passController.text)){
-      navigationService.navigateTo(Routes.splashView);
+      navigationService.navigateTo(Routes.onBoardingView);
     }
   }
 
@@ -54,7 +54,7 @@ class SignupViewModel extends AuthenticationViewModel {
       navigationService.replaceWith(Routes.loginView);
 
   void navigateToForgotPass() =>
-      navigationService.navigateTo(Routes.splashView);
+      navigationService.navigateTo(Routes.onBoardingView);
 
 
   void validateEmail(String? x){

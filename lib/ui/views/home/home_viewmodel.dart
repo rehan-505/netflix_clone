@@ -1,13 +1,28 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
+import 'package:uuid/uuid.dart';
 
-class HomeViewModel extends BaseViewModel {
+import '../../../enums/movie_category.dart';
+import '../../../models/movie.dart';
 
-  final BottomSheetService bottomSheetService = locator<BottomSheetService>();
+class HomeViewModel extends StreamViewModel {
 
-  void showBottomSheet(){
-    bottomSheetService.showBottomSheet(title: "Hello",);
+  bool uploading = false;
 
+  Movie? _movie;
+
+
+  @override
+  // TODO: implement stream
+  Stream<DocumentSnapshot<Map<String,dynamic>>> get stream => FirebaseFirestore.instance.collection('movies').doc('poster').snapshots();
+
+  void setMovie(Map<String,dynamic> map){
+    _movie = Movie.fromJson(map);
   }
+
+  Movie? get getMovie  => _movie;
+
 }

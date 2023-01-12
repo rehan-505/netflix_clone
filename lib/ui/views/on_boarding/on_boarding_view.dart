@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
 import 'package:stacked/stacked.dart';
+import '../../../utils/global_functions.dart';
 import '../../common/app_colors.dart';
 import 'on_boarding_constants.dart';
 import 'on_boarding_viewmodel.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class OnBoardingView extends StatelessWidget {
   const OnBoardingView({Key? key}) : super(key: key);
@@ -42,9 +42,7 @@ class OnBoardingView extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const OnBoardingDots(),
-                      SizedBox(
-                        height: 20.h,
-                      ),
+                      20.verticalSpace,
                       GestureDetector(
                         onTap: model.navigateToSignup,
                         child: Container(
@@ -57,11 +55,7 @@ class OnBoardingView extends StatelessWidget {
                           ),
                           child: Text(
                             "GET STARTED",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16.sp,
-                                letterSpacing: 1),
+                            style: buttonHeadingStyle,
                           ),
                         ),
                       ),
@@ -80,7 +74,7 @@ class OnBoardingView extends StatelessWidget {
                   padding:  EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
                   child: Row(
                     children: [
-                      SvgPicture.asset("assets/images/svg/n_logo.svg", height: 45 , width: 30, ),
+                      buildNLogo(),
                       const Spacer(),
                       InkWell(
                           onTap: model.navigateToLogin,
@@ -134,14 +128,10 @@ class OnBoardingView extends StatelessWidget {
                     style: headlineStyle,
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(
-                    height: 20.h,
-                  ),
+                  20.verticalSpace,
                   Text(subtitle,
                       style: bodyStyleWhite70, textAlign: TextAlign.center),
-                   SizedBox(
-                    height: 140.h,
-                  )
+                   140.verticalSpace
                 ],
               ),
             ),

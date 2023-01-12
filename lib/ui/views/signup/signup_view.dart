@@ -25,7 +25,7 @@ class SignupView extends StatelessWidget {
           busy: model.isBusy,
           form: Column(
             children: [
-              CustomTextField(
+              CustomAuthTextField(
                 textInputAction: TextInputAction.next,
                 textEditingController: model.emailController,
                 onSubmit: model.onEmailFieldSubmit,
@@ -39,10 +39,8 @@ class SignupView extends StatelessWidget {
                 ),
                 onChanged: model.validateEmail,
               ),
-              SizedBox(
-                height: 15.h,
-              ),
-              CustomTextField(
+              15.verticalSpace,
+              CustomAuthTextField(
                   textEditingController: model.passController,
                   onSubmit: model.onPassFieldSubmit,
                   onTap: model.onPassFieldTapped,

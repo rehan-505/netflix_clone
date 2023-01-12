@@ -111,7 +111,7 @@ class ComingSoonView extends StatelessWidget {
                                   ),
                                   5.verticalSpace,
                                   Row(
-                                    children:  [
+                                    children: [
                                       Text("How to Sell Drugs"),
                                       Spacer(),
                                       Icon(

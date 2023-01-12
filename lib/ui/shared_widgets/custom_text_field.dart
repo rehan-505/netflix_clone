@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../common/app_colors.dart';
 import '../common/decorations.dart';
 
-class CustomTextField extends StatelessWidget {
-  const CustomTextField(
+class CustomAuthTextField extends StatelessWidget {
+  const CustomAuthTextField(
       {Key? key,
       this.errorText,
       this.labelText,
