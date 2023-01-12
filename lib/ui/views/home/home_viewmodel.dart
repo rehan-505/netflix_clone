@@ -10,19 +10,4 @@ import '../../../models/movie.dart';
 
 class HomeViewModel extends StreamViewModel {
 
-  bool uploading = false;
-
-  Movie? _movie;
-
-
-  @override
-  // TODO: implement stream
-  Stream<DocumentSnapshot<Map<String,dynamic>>> get stream => FirebaseFirestore.instance.collection('movies').doc('poster').snapshots();
-
-  void setMovie(Map<String,dynamic> map){
-    _movie = Movie.fromJson(map);
-  }
-
-  Movie? get getMovie  => _movie;
-
 }

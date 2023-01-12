@@ -8,6 +8,7 @@ import 'package:netflix_clone/ui/views/search/search_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../common/app_styles.dart';
 import 'dashboard_viewmodel.dart';
 
 class DashboardView extends StatelessWidget {
@@ -64,7 +65,7 @@ class DashboardView extends StatelessWidget {
       icon: Icon(index == model.controller.index ? iconData1 : iconData2),
       title: title, activeColorPrimary: Colors.white,
       inactiveColorPrimary: Colors.grey,
-      textStyle: TextStyle(color: Colors.white,fontSize: 10.sp)
+      textStyle: captionStyle10
 
     );
   }
