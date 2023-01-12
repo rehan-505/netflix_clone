@@ -9,6 +9,7 @@ import 'package:stacked/stacked.dart';
 
 import '../../../utils/global_functions.dart';
 import '../../common/app_colors.dart';
+import '../../common/app_styles.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
@@ -59,30 +60,37 @@ class HomeView extends StatelessWidget {
           ),
         ),
         extendBodyBehindAppBar: true,
-        body: model.isBusy ? const Center(child: CircularProgressIndicator(),) : ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            StreamBuilder(
-                stream: model.stream,
-                builder: (context,AsyncSnapshot<DocumentSnapshot<Map<String,dynamic>>> snapshot){
-                  if(snapshot.connectionState==ConnectionState.waiting || (!(snapshot.hasData))){
-                    return SizedBox(
-                      height: 0.66.sh,
-                      child: Center(child: const CircularProgressIndicator(color: Colors.white,)),
-                    );
-                  }
-                  model.setMovie(snapshot.data!.data()!);
-                  return _buildMainPoster(context, model.getMovie!);
+        body: model.isBusy ? const Center(child: CircularProgressIndicator(),) :
+        StreamBuilder(
+            stream: model.stream,
+            builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot){
 
-            }),
+              if(snapshot.connectionState==ConnectionState.waiting || !(snapshot.hasData)){
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+                );
+              }
 
-            _buildCategoryHorizontalList("Trending Now",model, context),
-            30.verticalSpace,
-            _buildCategoryHorizontalList("Trending Now",model, context),
-            30.verticalSpace,
-            _buildCategoryHorizontalList("Trending Now",model, context),
-          ],
-        ),
+              model.fillList(snapshot.data!.docs);
+
+
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              _buildMainPoster(context, model.posterMovie),
+              _buildCategoryHorizontalList("Trending Now", context, model.getMovies.sublist(0,model.getMovies.length~/2) ),
+              30.verticalSpace,
+              _buildCategoryHorizontalList("Award Winning", context,model.getMovies.sublist(model.getMovies.length~/2,model.getMovies.length)),
+              30.verticalSpace,
+              _buildCategoryHorizontalList("Top Movies", context,model.getMovies.where((element) => !(element.isSeason)).toList(),reverse: true),
+              30.verticalSpace,
+              _buildCategoryHorizontalList("Top TV Shows", context,model.getMovies.where((element) => (element.isSeason)).toList(),reverse: true),
+
+            ],
+          );
+        }),
       ),
     );
   }
@@ -119,7 +127,7 @@ class HomeView extends StatelessWidget {
             Positioned(
               bottom: 0,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.black,
                 ),
                 width: 1.sw,
@@ -156,21 +164,14 @@ class HomeView extends StatelessWidget {
                               : Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Container(
-                                // color:Colors.green ,
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    size: 30.w,
-                                  )),
+                              Icon(
+                                Icons.play_arrow,
+                                size: 30.w,
+                              ),
                               5.horizontalSpace,
-                              Container(
-                                child: Text(
-                                  "Play",
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15.sp),
-                                ),
+                              Text(
+                                "Play",
+                                style: blackStyle15Bold,
                               ),
                             ],
                           ),
@@ -189,7 +190,7 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  Widget _buildCategoryHorizontalList(String categoryName, HomeViewModel model, BuildContext context) {
+  Widget _buildCategoryHorizontalList(String categoryName, BuildContext context, List<Movie> movies, {bool reverse = false}) {
     // print("into build category");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,31 +200,32 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.only(left: 10.w),
           child: Text(
             categoryName,
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 20.sp,
-                fontWeight: FontWeight.bold),
+            style: heading3Style,
           ),
         ),
         10.verticalSpace,
         SizedBox(
           height: 150.h,
           child: ListView.builder(
+
               scrollDirection: Axis.horizontal,
-              itemCount: 10,
+              itemCount: movies.length,
               itemBuilder: (context, index) {
+
+                Movie movie = movies[reverse ? (movies.length-1)-index : index];
+
                 return InkWell(
                   onTap: () async{
                     // await model.uploadMovies();
-                    // showBottomSheet(context);
+                    showBottomSheet(context,movie);
                     // model.showBottomSheet();
                   },
                   child: Padding(
                     padding: EdgeInsets.only(left: 10.w),
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
-                        child: Image.asset(
-                          "assets/images/mini_poster/stranger_things.png",
+                        child: Image.network(
+                          movie.imgUrl,
                           height: 100.h,
                           width: 100.h,
                           fit: BoxFit.cover,
@@ -251,20 +253,19 @@ class HomeView extends StatelessWidget {
         5.verticalSpace,
         Text(
           title,
-          style: TextStyle(
-              color: Colors.white, fontSize: 11, fontWeight: FontWeight.w200),
+          style: captionStyle11,
         )
       ],
     );
   }
 
-  void showBottomSheet(BuildContext ccontext){
+  void showBottomSheet(BuildContext screenContext,Movie movie){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
       useRootNavigator: true,
       isScrollControlled: true,
       elevation: 0.35.sh,
-        context: ccontext,
+        context: screenContext,
         builder: (context){
       return Container(
         decoration: BoxDecoration(
@@ -283,8 +284,8 @@ class HomeView extends StatelessWidget {
                 children: [
                   ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
-                      child: Image.asset(
-                        "assets/images/mini_poster/stranger_things.png",
+                      child: Image.network(
+                        movie.imgUrl,
                         height: 120.h,
                         width: 80.w,
                         fit: BoxFit.cover,
@@ -295,19 +296,19 @@ class HomeView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
-                          Text("1899", style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),),
+                          Text(movie.title, style: heading3Style,),
                           5.verticalSpace,
                           Row(
                             children: [
-                              const Text("2022", style: TextStyle(fontSize: 12, color: Colors.grey),),
+                               Text(movie.releaseDate.year.toString(), style: captionStyleGrey,),
                               10.horizontalSpace,
-                              const Text("16+",style: TextStyle(fontSize: 12, color: Colors.grey),),
+                               Text("${movie.ageRating.toString()}+",style: captionStyleGrey,),
                               10.horizontalSpace,
-                              const Text("18 Episodes",style: TextStyle(fontSize: 12, color: Colors.grey),),
+                              Text( movie.isSeason ? "New Episodes" : "New Release",style: captionStyleGrey,),
                             ],
                           ),
                          5.verticalSpace,
-                          Text("dummy "*20, style: TextStyle(color: Colors.white,fontSize: 12),)
+                          Text("${movie.des} "*20, style: captionStyleGrey.copyWith(color: Colors.white,),)
                         ],
                       )
                    ),
@@ -332,7 +333,7 @@ class HomeView extends StatelessWidget {
               InkWell(
                 onTap: (){
                   Navigator.pop(context);
-                  Navigator.push(ccontext, MaterialPageRoute(builder: (context)=>const MovieDetailsScreenView()));
+                  Navigator.push(screenContext, MaterialPageRoute(builder: (context)=>const MovieDetailsScreenView()));
 
                   // PersistentNavBarNavigator.pushNewScreen(
                   //   context,
@@ -372,7 +373,7 @@ class HomeView extends StatelessWidget {
           child: Icon(iconData, color: iconColor ?? Colors.white,),
         ),
         4.verticalSpace,
-        Text(title, style: TextStyle(color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.w100),)
+        Text(title, style: captionStyleGrey.copyWith(fontWeight: FontWeight.w100),)
       ],
     );
   }
