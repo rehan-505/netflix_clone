@@ -1,3 +1,5 @@
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 String? emailValidation(String? x) {
   if (x == null || x.isEmpty) {
@@ -25,7 +27,12 @@ String? passwordValidation(String? value) {
 
 String? generalValidation(String? value, {String fieldName = 'Field'}) {
   if (value == null || value.isEmpty) {
-    return '$fieldName is Required';
+    return '$fieldName cannot be empty';
   }
   return null;
 }
+
+SvgPicture buildNLogo(){
+  return SvgPicture.asset("assets/images/svg/n_logo.svg", height: 45.h, width: 30.w, );
+}
+

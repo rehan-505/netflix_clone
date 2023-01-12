@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -21,7 +20,8 @@ TextStyle heading2Style = TextStyle(
     color: Colors.white
 );
 
-
+TextStyle captionStyle11 = TextStyle(
+    color: Colors.white, fontSize: 11.sp, fontWeight: FontWeight.w200);
 
 const TextStyle heading4Style = TextStyle(
   fontSize: 16,
@@ -34,10 +34,25 @@ TextStyle headlineStyle = TextStyle(
   color: Colors.white
 );
 
-const TextStyle bodyStyle = TextStyle(
-  fontSize: 16,
-  fontWeight: FontWeight.w100,
+ TextStyle bodyStyle16 = TextStyle(
+  fontSize: 16.sp,
+  color: Colors.white
 );
+
+ TextStyle blackStyle15Bold = TextStyle(
+     color: Colors.black,
+     fontWeight: FontWeight.bold,
+     fontSize: 15.sp);
+
+
+ TextStyle buttonHeadingStyle = TextStyle(
+     color: Colors.white,
+     fontWeight: FontWeight.w500,
+     fontSize: 16.sp,
+     letterSpacing: 1);
+
+
+const TextStyle redStyle =  TextStyle(color: Colors.red);
 
 const TextStyle bodyStyleWhite70 = TextStyle(
   fontSize: 16,
@@ -66,6 +81,11 @@ const TextStyle captionStyle = TextStyle(
   fontSize: 12,
   fontWeight: FontWeight.w400,
 );
+
+TextStyle captionStyle10 = TextStyle(color: Colors.white,fontSize: 10.sp);
+
+
+TextStyle captionStyleGrey = TextStyle(fontSize: 12.sp, color: Colors.grey);
 
 const TextStyle subtitleStyle = TextStyle(
   fontSize: 12,

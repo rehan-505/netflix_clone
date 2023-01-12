@@ -1,14 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:netflix_clone/app/app.locator.dart';
-import 'package:netflix_clone/app/app.router.dart';
+import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 import '../../../utils/global_functions.dart';
 import '../../common/app_colors.dart';
-import '../../common/app_styles.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
@@ -40,7 +40,7 @@ class HomeView extends StatelessWidget {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(4.r),
                         child: Image.asset(
-                          "assets/images/profile_avatars/blue.png",
+                          "assets/images/profile_avatars/img_0.png",
                           scale: 12.r,
                         )),
                   ],
@@ -59,10 +59,22 @@ class HomeView extends StatelessWidget {
           ),
         ),
         extendBodyBehindAppBar: true,
-        body: ListView(
+        body: model.isBusy ? const Center(child: CircularProgressIndicator(),) : ListView(
           padding: EdgeInsets.zero,
           children: [
-            _buildMainPoster(),
+            StreamBuilder(
+                stream: model.stream,
+                builder: (context,AsyncSnapshot<DocumentSnapshot<Map<String,dynamic>>> snapshot){
+                  if(snapshot.connectionState==ConnectionState.waiting || (!(snapshot.hasData))){
+                    return SizedBox(
+                      height: 0.66.sh,
+                      child: Center(child: const CircularProgressIndicator(color: Colors.white,)),
+                    );
+                  }
+                  model.setMovie(snapshot.data!.data()!);
+                  return _buildMainPoster(context, model.getMovie!);
+
+            }),
 
             _buildCategoryHorizontalList("Trending Now",model, context),
             30.verticalSpace,
@@ -75,19 +87,19 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildMainPoster() {
-    return AspectRatio(
-      aspectRatio: 0.66,
-      child: Container(
+  Widget _buildMainPoster(BuildContext context,Movie movie) {
+    return StreamBuilder(builder: (context,snapshot){
+      return AspectRatio(
+        aspectRatio: 0.66,
         child: Stack(
           // mainAxisSize: MainAxisSize.min,
           children: [
             Container(
               // margin: EdgeInsets.only(bottom: 65.h),
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(
-                    "assets/posters/crown1.png",
+                  image: NetworkImage(
+                    movie.imgUrl,
                   ),
                   fit: BoxFit.fitWidth,
                   alignment: FractionalOffset.topCenter,
@@ -121,7 +133,13 @@ class HomeView extends StatelessWidget {
                     children: [
                       _buildSmallButton(Icons.add, "My List"),
                       InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          PersistentNavBarNavigator.pushNewScreen(
+                            context,
+                            screen: MovieDetailsScreenView(),
+                            withNavBar: true, // OPTIONAL VALUE. True by default.
+                          );
+                        },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(6.w, 3.h, 12.w, 3.h),
                           alignment: Alignment.center,
@@ -148,7 +166,10 @@ class HomeView extends StatelessWidget {
                               Container(
                                 child: Text(
                                   "Play",
-                                  style: blackStyle15Bold,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15.sp),
                                 ),
                               ),
                             ],
@@ -164,8 +185,8 @@ class HomeView extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildCategoryHorizontalList(String categoryName, HomeViewModel model, BuildContext context) {
@@ -178,7 +199,10 @@ class HomeView extends StatelessWidget {
           padding: EdgeInsets.only(left: 10.w),
           child: Text(
             categoryName,
-            style: heading3Style,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 20.sp,
+                fontWeight: FontWeight.bold),
           ),
         ),
         10.verticalSpace,
@@ -189,11 +213,9 @@ class HomeView extends StatelessWidget {
               itemCount: 10,
               itemBuilder: (context, index) {
                 return InkWell(
-                  onTap: (){
-
-                    // final navigationService = locator<NavigationService>();
-                    // navigationService.navigateToVideoPlayerScreenView();
-                    showBottomSheet(context);
+                  onTap: () async{
+                    // await model.uploadMovies();
+                    // showBottomSheet(context);
                     // model.showBottomSheet();
                   },
                   child: Padding(
@@ -201,7 +223,7 @@ class HomeView extends StatelessWidget {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(8.r),
                         child: Image.asset(
-                          "assets/images/mini_poster/img_1.png",
+                          "assets/images/mini_poster/stranger_things.png",
                           height: 100.h,
                           width: 100.h,
                           fit: BoxFit.cover,
@@ -229,19 +251,20 @@ class HomeView extends StatelessWidget {
         5.verticalSpace,
         Text(
           title,
-          style: captionStyle11,
+          style: TextStyle(
+              color: Colors.white, fontSize: 11, fontWeight: FontWeight.w200),
         )
       ],
     );
   }
 
-  void showBottomSheet(BuildContext context){
+  void showBottomSheet(BuildContext ccontext){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
       useRootNavigator: true,
       isScrollControlled: true,
       elevation: 0.35.sh,
-        context: context,
+        context: ccontext,
         builder: (context){
       return Container(
         decoration: BoxDecoration(
@@ -261,7 +284,7 @@ class HomeView extends StatelessWidget {
                   ClipRRect(
                       borderRadius: BorderRadius.circular(8.r),
                       child: Image.asset(
-                        "assets/images/mini_poster/img_1.png",
+                        "assets/images/mini_poster/stranger_things.png",
                         height: 120.h,
                         width: 80.w,
                         fit: BoxFit.cover,
@@ -272,19 +295,19 @@ class HomeView extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
 
                         children: [
-                          Text("1899", style: heading3Style,),
+                          Text("1899", style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeight.bold),),
                           5.verticalSpace,
                           Row(
                             children: [
-                              Text("2022", style: captionStyleGrey,),
+                              const Text("2022", style: TextStyle(fontSize: 12, color: Colors.grey),),
                               10.horizontalSpace,
-                              Text("16+",style: captionStyleGrey,),
+                              const Text("16+",style: TextStyle(fontSize: 12, color: Colors.grey),),
                               10.horizontalSpace,
-                              Text("18 Episodes",style: captionStyleGrey,),
+                              const Text("18 Episodes",style: TextStyle(fontSize: 12, color: Colors.grey),),
                             ],
                           ),
                          5.verticalSpace,
-                          Text("dummy "*20, style: captionStyleGrey.copyWith(color: Colors.white),)
+                          Text("dummy "*20, style: TextStyle(color: Colors.white,fontSize: 12),)
                         ],
                       )
                    ),
@@ -306,14 +329,27 @@ class HomeView extends StatelessWidget {
               const Divider(
                 color: Colors.grey,
               ),
-              Row(
-                children: [
-                  const Icon(Icons.info_outline, color: Colors.white,),
-                  10.horizontalSpace,
-                  const Text("Details & Info"),
-                  const Spacer(),
-                  const Icon(Icons.arrow_forward_ios,color: Colors.white)
-                ],
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                  Navigator.push(ccontext, MaterialPageRoute(builder: (context)=>const MovieDetailsScreenView()));
+
+                  // PersistentNavBarNavigator.pushNewScreen(
+                  //   context,
+                  //   screen: MovieDetailsScreenView(),
+                  //   withNavBar: true, // OPTIONAL VALUE. True by default.
+                  // );
+
+                },
+                child: Row(
+                  children: [
+                    Icon(Icons.info_outline, color: Colors.white,),
+                    10.horizontalSpace,
+                    Text("Details & Info"),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios,color: Colors.white)
+                  ],
+                ),
               ),
               20.verticalSpace
             ],
@@ -336,7 +372,7 @@ class HomeView extends StatelessWidget {
           child: Icon(iconData, color: iconColor ?? Colors.white,),
         ),
         4.verticalSpace,
-        Text(title, style: captionStyleGrey.copyWith(fontWeight: FontWeight.w100),)
+        Text(title, style: TextStyle(color: Colors.grey, fontSize: 12.sp, fontWeight: FontWeight.w100),)
       ],
     );
   }

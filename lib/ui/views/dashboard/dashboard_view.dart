@@ -1,5 +1,10 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/app/app.locator.dart';
+import 'package:netflix_clone/ui/views/coming_soon/coming_soon_view.dart';
 import 'package:netflix_clone/ui/views/home/home_view.dart';
+import 'package:netflix_clone/ui/views/more/more_view.dart';
+import 'package:netflix_clone/ui/views/search/search_view.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -12,7 +17,7 @@ class DashboardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<DashboardViewModel>.reactive(
-      viewModelBuilder: () => DashboardViewModel(),
+      viewModelBuilder: () => locator<DashboardViewModel>(),
       builder: (context, model, child) => PersistentTabView(
         context,
         controller: model.controller,
@@ -21,16 +26,16 @@ class DashboardView extends StatelessWidget {
 
         screens: const [
           HomeView(),
-          Scaffold(),
-          Scaffold(),
-          Scaffold(),
+          ComingSoonView(),
+          SearchView(),
+          MoreView(),
 
         ],
         items: [
           _buildNavBarItem(iconData1: Icons.home, iconData2: Icons.home_outlined, title: "Home", index: 0,model: model),
           _buildNavBarItem(iconData1: Icons.video_collection, iconData2: Icons.video_collection_outlined, title: "New and Hot", index: 1,model: model),
           _buildNavBarItem(iconData1: Icons.search, iconData2: Icons.search, title: "Search", index: 2,model: model),
-          _buildNavBarItem(iconData1: Icons.download_for_offline, iconData2: Icons.download_for_offline_outlined, title: "Downloads", index: 3,model: model),
+          _buildNavBarItem(iconData1: Icons.menu, iconData2: Icons.menu_outlined, title: "More", index: 3,model: model),
         ],
         confineInSafeArea: true,
         backgroundColor: Colors.black87, // Default is Colors.white.

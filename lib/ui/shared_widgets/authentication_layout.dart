@@ -29,13 +29,13 @@ class AuthenticationLayout extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 25.0.w),
       child: Column(
         children: [
-          SizedBox(height: 50.h,),
+          50.verticalSpace,
           Row(
             children: [
               if(onBackPressed!=null) InkWell(
                   onTap: onBackPressed,
                   child: const Icon(Icons.arrow_back, color: Colors.white,)),
-              SizedBox(width: 15.w,),
+              15.horizontalSpace,
               SvgPicture.asset("assets/images/svg/logo.svg"),
 
             ],
@@ -51,10 +51,10 @@ class AuthenticationLayout extends StatelessWidget {
                 if(validationMsg!=null && validationMsg!.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.only(bottom: 20.h),
-                    child: Text(validationMsg!,style: const TextStyle(color: Colors.red),),
+                    child: Text(validationMsg!,style: redStyle ,),
                   ),
                 CustomButton(mainButtonTitle: mainButtonTitle, busy: busy,onPressed: onMainButtonPressed ),
-                SizedBox(height: 50.h,),
+                50.verticalSpace,
                 if(alternateText!=null) Padding(
                   padding: EdgeInsets.only(bottom: 50.h),
                   child: InkWell(
