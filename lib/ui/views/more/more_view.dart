@@ -5,6 +5,7 @@ import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../models/profile.dart';
 import 'more_viewmodel.dart';
 
 class MoreView extends StatelessWidget {
@@ -32,14 +33,27 @@ class MoreView extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: (!(model.userService.myUser!.profiles.length > 4))
+                        ? model.userService.myUser!.profiles.length + 1
+                        : model.userService.myUser!.profiles.length,
                     itemBuilder: (context, index) {
+
+                      Profile? profile;
+
+                      bool isLastIndex =
+                      (index == model.userService.myUser!.profiles.length);
+
+                      if (!isLastIndex) {
+                        profile = model.userService.myUser!.profiles[index];
+                      }
+
+
                       return Padding(
                         padding:  EdgeInsets.only(right: 10.w ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            index == 3
+                            isLastIndex
                                 ? Container(
                                     decoration: BoxDecoration(
                                         border: Border.all(
@@ -57,13 +71,14 @@ class MoreView extends StatelessWidget {
                                 : ClipRRect(
                                     borderRadius: BorderRadius.circular(4.r),
                                     child: Image.asset(
-                                      "assets/images/profile_avatars/blue.png",
+                                      profile!.assetImg,
                                       height: 60.h,
                                       width: 60.h,
                                     )),
                             10.verticalSpace,
                             Text(
-                              "Rehan",
+                              isLastIndex ? "Add" :
+                              profile!.name,
                               style: captionStyleGrey,
                             )
                           ],
@@ -84,7 +99,12 @@ class MoreView extends StatelessWidget {
               _buildTile(iconData: Icons.playlist_add_check, title: "My List"),
               _buildTile(iconData: Icons.person_outline, title: "Account"),
               50.verticalSpace,
-              Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),)
+              model.isBusy ? SizedBox(
+                  height: 50.h,
+                  child: const Center(child: CircularProgressIndicator(),)) :
+              InkWell(
+                  onTap: model.logout,
+                  child: Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),))
 
 
             ],

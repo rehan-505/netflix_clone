@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netflix_clone/models/profile.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/common/decorations.dart';
 import 'package:netflix_clone/ui/shared_widgets/custom_button.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../common/app_styles.dart';
 import '../../shared_widgets/custom_app_bar.dart';
 import 'edit_profile_viewmodel.dart';
 
 class EditProfileView extends StatelessWidget {
-  const EditProfileView({Key? key}) : super(key: key);
+  const EditProfileView({Key? key, required this.profile}) : super(key: key);
+  final Profile profile;
 
   @override
   Widget build(BuildContext context) {
@@ -19,23 +22,41 @@ class EditProfileView extends StatelessWidget {
     );
 
     return ViewModelBuilder<EditProfileViewModel>.reactive(
-      viewModelBuilder: () => EditProfileViewModel(),
+      viewModelBuilder: () => EditProfileViewModel(profile),
+      onModelReady: (model){
+        model.setName();
+      },
       builder: (context, model, child) => Scaffold(
         backgroundColor: kcBackgroundColor,
+        appBar: AppBar(
+          // actions: [
+          //   InkWell(
+          //       onTap: (){
+          //         model.deleteProfile();
+          //       },
+          //       child: const Icon(Icons.delete_forever, color: Colors.red,)),
+          //   30.horizontalSpace,
+          // ],
+          title: Text("Edit Profile", style: heading3Style,),
+          elevation: 0,
+          backgroundColor: kcBackgroundColor,
+          automaticallyImplyLeading: false,
+          leading:  InkWell(
+              onTap: (){
+                model.navigationService.back(result: false);
+              },
+              child: const Icon(Icons.arrow_back))
+        ),
         body: Padding(
 
           padding: EdgeInsets.symmetric(horizontal: 25.w),
           child: Column(
             children: [
-              50.verticalSpace,
-              CustomAppBar(text: "Edit Profile", onBackPressed: (){},),
-              30.verticalSpace,
-              Image.asset("assets/images/profile_avatars/img_1.png",
+              10.verticalSpace,
+              Image.asset(model.profile.assetImg,
                 height: 100.h,
                 width: 100.h,
                 fit: BoxFit.fill,
-
-
               ),
               30.verticalSpace,
               Padding(
@@ -53,13 +74,18 @@ class EditProfileView extends StatelessWidget {
                     hintText: "Profile Name",
                     filled: true,
                     fillColor: Colors.grey[900],
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.7))
+                    hintStyle: normalStyleLowOpacity
                   ),
 
 
                 ),
               ),
               50.verticalSpace,
+              model.isBusy ? SizedBox(
+                height: 50.h,
+                child: const Center(child: CircularProgressIndicator()),
+              ) :
+
               Padding(
                 padding:  EdgeInsets.symmetric(horizontal: 100.w),
                 child:  CustomButton(mainButtonTitle: "Save", busy: false,

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:netflix_clone/models/movie.dart';
-import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../utils/global_functions.dart';
@@ -41,8 +39,8 @@ class HomeView extends StatelessWidget {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(4.r),
                         child: Image.asset(
-                          "assets/images/profile_avatars/img_0.png",
-                          scale: 12.r,
+                          model.userService.currentProfile!.assetImg,
+                          scale: 6.r,
                         )),
                   ],
                 ),
@@ -68,7 +66,6 @@ class HomeView extends StatelessWidget {
               if(snapshot.connectionState==ConnectionState.waiting || !(snapshot.hasData)){
                 return const Center(
                   child: CircularProgressIndicator(
-                    color: Colors.white,
                   ),
                 );
               }
@@ -80,13 +77,13 @@ class HomeView extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               _buildMainPoster(context, model.posterMovie),
-              _buildCategoryHorizontalList("Trending Now", context, model.getMovies.sublist(0,model.getMovies.length~/2) ),
+              _buildCategoryHorizontalList("Trending Now", context, model.getMovies.sublist(0,model.getMovies.length~/2),model: model ),
               30.verticalSpace,
-              _buildCategoryHorizontalList("Award Winning", context,model.getMovies.sublist(model.getMovies.length~/2,model.getMovies.length)),
+              _buildCategoryHorizontalList("Award Winning", context,model.getMovies.sublist(model.getMovies.length~/2,model.getMovies.length),model: model),
               30.verticalSpace,
-              _buildCategoryHorizontalList("Top Movies", context,model.getMovies.where((element) => !(element.isSeason)).toList(),reverse: true),
+              _buildCategoryHorizontalList("Top Movies", context,model.getMovies.where((element) => !(element.isSeason)).toList(),reverse: true,model: model),
               30.verticalSpace,
-              _buildCategoryHorizontalList("Top TV Shows", context,model.getMovies.where((element) => (element.isSeason)).toList(),reverse: true),
+              _buildCategoryHorizontalList("Top TV Shows", context,model.getMovies.where((element) => (element.isSeason)).toList(),reverse: true,model: model),
 
             ],
           );
@@ -142,11 +139,11 @@ class HomeView extends StatelessWidget {
                       _buildSmallButton(Icons.add, "My List"),
                       InkWell(
                         onTap: () {
-                          PersistentNavBarNavigator.pushNewScreen(
-                            context,
-                            screen: MovieDetailsScreenView(),
-                            withNavBar: true, // OPTIONAL VALUE. True by default.
-                          );
+                          // PersistentNavBarNavigator.pushNewScreen(
+                          //   context,
+                          //   screen: MovieDetailsScreenView(),
+                          //   withNavBar: true, // OPTIONAL VALUE. True by default.
+                          // );
                         },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(6.w, 3.h, 12.w, 3.h),
@@ -156,12 +153,7 @@ class HomeView extends StatelessWidget {
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(4.r),
                           ),
-                          child: false
-                              ? const CircularProgressIndicator(
-                            valueColor:
-                            AlwaysStoppedAnimation(kcPrimaryColor),
-                          )
-                              : Row(
+                          child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
@@ -190,7 +182,7 @@ class HomeView extends StatelessWidget {
     });
   }
 
-  Widget _buildCategoryHorizontalList(String categoryName, BuildContext context, List<Movie> movies, {bool reverse = false}) {
+  Widget _buildCategoryHorizontalList(String categoryName, BuildContext context, List<Movie> movies, {bool reverse = false, required HomeViewModel model}) {
     // print("into build category");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +209,7 @@ class HomeView extends StatelessWidget {
                 return InkWell(
                   onTap: () async{
                     // await model.uploadMovies();
-                    showBottomSheet(context,movie);
+                    showBottomSheet(context,movie,model);
                     // model.showBottomSheet();
                   },
                   child: Padding(
@@ -259,7 +251,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  void showBottomSheet(BuildContext screenContext,Movie movie){
+  void showBottomSheet(BuildContext screenContext,Movie movie,HomeViewModel model){
     showModalBottomSheet(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(15.r))),
       useRootNavigator: true,
@@ -332,23 +324,15 @@ class HomeView extends StatelessWidget {
               ),
               InkWell(
                 onTap: (){
-                  Navigator.pop(context);
-                  Navigator.push(screenContext, MaterialPageRoute(builder: (context)=>const MovieDetailsScreenView()));
-
-                  // PersistentNavBarNavigator.pushNewScreen(
-                  //   context,
-                  //   screen: MovieDetailsScreenView(),
-                  //   withNavBar: true, // OPTIONAL VALUE. True by default.
-                  // );
-
+                  model.detailsAndInfoTapped(movie);
                 },
                 child: Row(
                   children: [
-                    Icon(Icons.info_outline, color: Colors.white,),
+                    const Icon(Icons.info_outline, color: Colors.white,),
                     10.horizontalSpace,
-                    Text("Details & Info"),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios,color: Colors.white)
+                    const Text("Details & Info"),
+                    const Spacer(),
+                    const Icon(Icons.arrow_forward_ios,color: Colors.white)
                   ],
                 ),
               ),

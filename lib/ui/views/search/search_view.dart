@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../common/app_styles.dart';
 import 'search_viewmodel.dart';
 
 class SearchView extends StatelessWidget {
@@ -21,13 +22,17 @@ class SearchView extends StatelessWidget {
           backgroundColor: Colors.black12,
           title: Row(
             children: [
+              Text("Search",
+                style: heading3Style,
+
+              ),
               // const Icon(Icons.arrow_back),
               const Spacer(),
               ClipRRect(
                   borderRadius: BorderRadius.circular(4.r),
                   child: Image.asset(
-                    "assets/images/profile_avatars/blue.png",
-                    scale: 12.r,
+                    model.userService.currentProfile!.assetImg,
+                    scale: 6.r,
                   )),
             ],
           ),
@@ -46,7 +51,7 @@ class SearchView extends StatelessWidget {
                 filled: true,
                 fillColor: Colors.grey[800],
                 hintText: "Search for a show,movie etc.",
-                hintStyle: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 13.sp),
+                hintStyle: normalStyleLowOpacity.copyWith(fontSize: 13.sp),
                 border: InputBorder.none,
                 focusedBorder: InputBorder.none,
                 enabledBorder: InputBorder.none,
@@ -56,7 +61,7 @@ class SearchView extends StatelessWidget {
             20.verticalSpace,
             Padding(
               padding:  EdgeInsets.only(left: 10.w),
-              child: Text("Top Searches",style: TextStyle(color: Colors.white,fontWeight: FontWeight.w600, fontSize: 20.sp),),
+              child: Text("Top Searches",style: subheadingStyle.copyWith(fontWeight: FontWeight.w600,),),
             ),
             20.verticalSpace,
             Expanded(child: ListView.builder(itemBuilder: (context,index){
@@ -94,9 +99,7 @@ class SearchView extends StatelessWidget {
           //   fit: BoxFit.cover,
           // ),
           13.horizontalSpace,
-          const Text("The Notebook",
-            // style: TextStyle(fontSize: 16.sp),
-          ),
+          const Text("The Notebook",),
           const Spacer(),
           Icon(Icons.play_circle_outline_rounded, color: Colors.white, size: 30.w,),
           15.horizontalSpace,

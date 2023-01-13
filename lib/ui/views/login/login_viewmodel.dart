@@ -1,7 +1,11 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/app_user.dart';
 
+import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
+import '../../../services/current_user_service.dart';
 import '../../../utils/global_functions.dart';
 import '../../base/authentication_viewmodel.dart';
 
@@ -17,6 +21,9 @@ class LoginViewModel extends AuthenticationViewModel{
 
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passFocusNode = FocusNode();
+
+  final CurrentUserService _userService = locator<CurrentUserService>();
+
 
 
 
@@ -46,7 +53,19 @@ class LoginViewModel extends AuthenticationViewModel{
     }
 
     if(await authService.signInWithEmailAndPass(emailController.text, passController.text)){
-      navigationService.navigateTo(Routes.selectProfileView);
+
+      ///if current user doesn't exist in db, create it
+      if(!(await _userService.currentUserExistsInDB())){
+        await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: FirebaseAuth.instance.currentUser!.email!));
+        navigationService.replaceWith(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
+
+      }
+      else{
+        await _userService.loadCurrentUser();
+        navigationService.replaceWith(Routes.selectProfileView);
+
+      }
+
     }
   }
 
