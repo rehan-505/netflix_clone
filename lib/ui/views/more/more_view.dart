@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
+import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../../models/profile.dart';
 import 'more_viewmodel.dart';
 
 class MoreView extends StatelessWidget {
@@ -15,11 +16,7 @@ class MoreView extends StatelessWidget {
     return ViewModelBuilder<MoreViewModel>.reactive(
       viewModelBuilder: () => MoreViewModel(),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          backgroundColor: kcBackgroundColor,
-          elevation: 0,
-          title: const Text("Profiles & More",style: TextStyle(fontWeight: FontWeight.w600)),
-        ),
+        appBar: CustomAppBar(title: "Profiles & More"),
         backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
           padding:  EdgeInsets.symmetric(horizontal: 10.w),
@@ -32,38 +29,76 @@ class MoreView extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: (!(model.userService.myUser!.profiles.length > 4))
+                        ? model.userService.myUser!.profiles.length + 1
+                        : model.userService.myUser!.profiles.length,
                     itemBuilder: (context, index) {
+
+                      Profile? profile;
+
+                      bool isLastIndex =
+                      (index == model.userService.myUser!.profiles.length);
+
+                      if (!isLastIndex) {
+                        profile = model.userService.myUser!.profiles[index];
+                      }
+
+                      bool selectedProfile = model.userService.currentProfile!.id==profile?.id;
+
+
                       return Padding(
                         padding:  EdgeInsets.only(right: 10.w ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            index == 3
-                                ? Container(
-                                    decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.grey, width: 0.5),
-                                        borderRadius: BorderRadius.circular(7.r)),
-                                    height: 60.h,
-                                    width: 60.h,
-                                    child: Center(
-                                        child: Icon(
-                                      Icons.add,
-                                      size: 60.h,
-                                      color: Colors.white,
-                                    )),
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(4.r),
-                                    child: Image.asset(
-                                      "assets/images/profile_avatars/blue.png",
+                            isLastIndex
+                                ? InkWell(onTap: model.navigateToAddProfile,
+
+                                  child: Container(
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Colors.grey, width: 0.5),
+                                          borderRadius: BorderRadius.circular(7.r)),
                                       height: 60.h,
                                       width: 60.h,
-                                    )),
-                            10.verticalSpace,
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.add,
+                                        size: 60.h,
+                                        color: Colors.white,
+                                      )),
+                                    ),
+                                )
+                                : InkWell(
+                                 onTap: (){
+                                   model.changeCurrentProfile(profile!);
+                                 },
+                                  child: Container(
+                                    height: selectedProfile ? 65.h : 60.h,
+                                    width: selectedProfile ? 65.h : 60.h,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: AssetImage(profile!.assetImg),
+                                        fit: BoxFit.cover,
+                                      ),
+                                      border: Border.all(color: Colors.white,width: selectedProfile ? 3.r : 0),
+                                      borderRadius: BorderRadius.circular(4.r),
+                                    ),
+                                    // child: ClipRRect(
+                                    //   borderRadius: BorderRadius.circular(4.r),
+                                    //   child: Image.asset(
+                                    //       profile!.assetImg,
+                                    //       height: 60.h,
+                                    //       width: 60.h,
+                                    //     fit: BoxFit.cover,
+                                    //     ),
+                                    // ),
+                                  ),
+                                ),
+                            (selectedProfile ? 5 : 10).verticalSpace,
                             Text(
-                              "Rehan",
+                              isLastIndex ? "Add" :
+                              profile!.name,
                               style: captionStyleGrey,
                             )
                           ],
@@ -72,19 +107,27 @@ class MoreView extends StatelessWidget {
                     }),
               ),
               20.verticalSpace,
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SvgPicture.asset("assets/images/svg/edit_icon.svg"),
-                  8.horizontalSpace,
-                  Text("Manage Profiles", style: heading3Style.copyWith(fontSize: 16.sp,color: Colors.white.withOpacity(0.8)),),
-                ],
+              InkWell(
+                onTap: model.navigateToManageProfile,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset("assets/images/svg/edit_icon.svg"),
+                    8.horizontalSpace,
+                    Text("Manage Profiles", style: heading3Style.copyWith(fontSize: 16.sp,color: Colors.white.withOpacity(0.8)),),
+                  ],
+                ),
               ),
               35.verticalSpace,
               _buildTile(iconData: Icons.playlist_add_check, title: "My List"),
               _buildTile(iconData: Icons.person_outline, title: "Account"),
               50.verticalSpace,
-              Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),)
+              model.isBusy ? SizedBox(
+                  height: 50.h,
+                  child: const Center(child: CircularProgressIndicator(),)) :
+              InkWell(
+                  onTap: model.logout,
+                  child: Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),))
 
 
             ],

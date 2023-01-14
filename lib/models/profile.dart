@@ -9,12 +9,13 @@ part 'profile.freezed.dart';
 // But if Person was not serializable, we could skip it.
 part 'profile.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class Profile with _$Profile {
   const factory Profile({
     required String id,
     required String assetImg,
     required String name,
+    required List<String> moviesList,
 }) = _Profile;
 
 factory Profile.fromJson(Map<String, Object?> json)

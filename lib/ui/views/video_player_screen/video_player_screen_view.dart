@@ -1,8 +1,6 @@
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/app/app.locator.dart';
 import 'package:stacked/stacked.dart';
-import 'package:stacked_services/stacked_services.dart';
 
 import 'video_player_screen_viewmodel.dart';
 

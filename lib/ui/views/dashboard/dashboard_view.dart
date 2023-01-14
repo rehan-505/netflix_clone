@@ -1,4 +1,3 @@
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/views/coming_soon/coming_soon_view.dart';
@@ -16,13 +15,13 @@ class DashboardView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return ViewModelBuilder<DashboardViewModel>.reactive(
-      viewModelBuilder: () => locator<DashboardViewModel>(),
+      viewModelBuilder: () => DashboardViewModel(),
       builder: (context, model, child) => PersistentTabView(
         context,
-        controller: model.controller,
+        controller: model.bottomBarService.controller,
         onItemSelected: model.onItemSelected,
-
 
         screens: const [
           HomeView(),
@@ -38,31 +37,26 @@ class DashboardView extends StatelessWidget {
           _buildNavBarItem(iconData1: Icons.menu, iconData2: Icons.menu_outlined, title: "More", index: 3,model: model),
         ],
         confineInSafeArea: true,
-        backgroundColor: Colors.black87, // Default is Colors.white.
-        handleAndroidBackButtonPress: true, // Default is true.
-        resizeToAvoidBottomInset: true, // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        stateManagement: true, // Default is true.
-        hideNavigationBarWhenKeyboardShows: true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+        backgroundColor: Colors.black87,
         popAllScreensOnTapOfSelectedTab: true,
         popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: const ItemAnimationProperties( // Navigation Bar's items animation properties.
+        itemAnimationProperties: const ItemAnimationProperties(
           duration: Duration(milliseconds: 200),
           curve: Curves.ease,
         ),
-        screenTransitionAnimation: const ScreenTransitionAnimation( // Screen transition animation on change of selected tab.
+        screenTransitionAnimation: const ScreenTransitionAnimation(
           animateTabTransition: true,
           curve: Curves.ease,
           duration: Duration(milliseconds: 200),
         ),
         navBarStyle: NavBarStyle.simple,
-        // Choose the nav bar style with this property.
       ),
     );
   }
 
   PersistentBottomNavBarItem _buildNavBarItem({required IconData iconData1, required IconData iconData2, required String title, required int index, required DashboardViewModel model }){
     return PersistentBottomNavBarItem(
-      icon: Icon(index == model.controller.index ? iconData1 : iconData2),
+      icon: Icon(index == model.bottomBarService.controller.index ? iconData1 : iconData2),
       title: title, activeColorPrimary: Colors.white,
       inactiveColorPrimary: Colors.grey,
       textStyle: captionStyle10

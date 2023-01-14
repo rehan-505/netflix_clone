@@ -5,12 +5,19 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:flutter/material.dart' as _i17;
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/movie.dart' as _i19;
+import 'package:netflix_clone/models/profile.dart' as _i18;
+import 'package:netflix_clone/ui/views/add_profile/add_profile_view.dart'
+    as _i15;
 import 'package:netflix_clone/ui/views/coming_soon/coming_soon_view.dart'
     as _i12;
 import 'package:netflix_clone/ui/views/dashboard/dashboard_view.dart' as _i9;
 import 'package:netflix_clone/ui/views/edit_profile/edit_profile_view.dart'
     as _i7;
+import 'package:netflix_clone/ui/views/forgot_pass/forgot_pass_view.dart'
+    as _i16;
 import 'package:netflix_clone/ui/views/home/home_view.dart' as _i8;
 import 'package:netflix_clone/ui/views/login/login_view.dart' as _i3;
 import 'package:netflix_clone/ui/views/more/more_view.dart' as _i14;
@@ -26,7 +33,7 @@ import 'package:netflix_clone/ui/views/startup/startup_view.dart' as _i2;
 import 'package:netflix_clone/ui/views/video_player_screen/video_player_screen_view.dart'
     as _i10;
 import 'package:stacked/stacked.dart' as _i1;
-import 'package:stacked_services/stacked_services.dart' as _i15;
+import 'package:stacked_services/stacked_services.dart' as _i20;
 
 class Routes {
   static const startupView = '/';
@@ -55,6 +62,10 @@ class Routes {
 
   static const moreView = '/more-view';
 
+  static const addProfileView = '/add-profile-view';
+
+  static const forgotPassView = '/forgot-pass-view';
+
   static const all = <String>{
     startupView,
     loginView,
@@ -69,6 +80,8 @@ class Routes {
     comingSoonView,
     movieDetailsScreenView,
     moreView,
+    addProfileView,
+    forgotPassView,
   };
 }
 
@@ -126,6 +139,14 @@ class StackedRouter extends _i1.RouterBase {
       Routes.moreView,
       page: _i14.MoreView,
     ),
+    _i1.RouteDef(
+      Routes.addProfileView,
+      page: _i15.AddProfileView,
+    ),
+    _i1.RouteDef(
+      Routes.forgotPassView,
+      page: _i16.ForgotPassView,
+    ),
   ];
 
   final _pagesMap = <Type, _i1.StackedRouteFactory>{
@@ -154,14 +175,20 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i6.SelectProfileView: (data) {
+      final args = data.getArgs<SelectProfileViewArguments>(
+        orElse: () => const SelectProfileViewArguments(),
+      );
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i6.SelectProfileView(),
+        builder: (context) => _i6.SelectProfileView(
+            key: args.key, onlyEditClickedView: args.onlyEditClickedView),
         settings: data,
       );
     },
     _i7.EditProfileView: (data) {
+      final args = data.getArgs<EditProfileViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i7.EditProfileView(),
+        builder: (context) =>
+            _i7.EditProfileView(key: args.key, profile: args.profile),
         settings: data,
       );
     },
@@ -196,14 +223,32 @@ class StackedRouter extends _i1.RouterBase {
       );
     },
     _i13.MovieDetailsScreenView: (data) {
+      final args = data.getArgs<MovieDetailsScreenViewArguments>(nullOk: false);
       return MaterialPageRoute<dynamic>(
-        builder: (context) => const _i13.MovieDetailsScreenView(),
+        builder: (context) =>
+            _i13.MovieDetailsScreenView(key: args.key, movie: args.movie),
         settings: data,
       );
     },
     _i14.MoreView: (data) {
       return MaterialPageRoute<dynamic>(
         builder: (context) => const _i14.MoreView(),
+        settings: data,
+      );
+    },
+    _i15.AddProfileView: (data) {
+      final args = data.getArgs<AddProfileViewArguments>(
+        orElse: () => const AddProfileViewArguments(),
+      );
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => _i15.AddProfileView(
+            key: args.key, nextRoute: args.nextRoute, backIcon: args.backIcon),
+        settings: data,
+      );
+    },
+    _i16.ForgotPassView: (data) {
+      return MaterialPageRoute<dynamic>(
+        builder: (context) => const _i16.ForgotPassView(),
         settings: data,
       );
     },
@@ -215,7 +260,54 @@ class StackedRouter extends _i1.RouterBase {
   Map<Type, _i1.StackedRouteFactory> get pagesMap => _pagesMap;
 }
 
-extension NavigatorStateExtension on _i15.NavigationService {
+class SelectProfileViewArguments {
+  const SelectProfileViewArguments({
+    this.key,
+    this.onlyEditClickedView = false,
+  });
+
+  final _i17.Key? key;
+
+  final bool onlyEditClickedView;
+}
+
+class EditProfileViewArguments {
+  const EditProfileViewArguments({
+    this.key,
+    required this.profile,
+  });
+
+  final _i17.Key? key;
+
+  final _i18.Profile profile;
+}
+
+class MovieDetailsScreenViewArguments {
+  const MovieDetailsScreenViewArguments({
+    this.key,
+    required this.movie,
+  });
+
+  final _i17.Key? key;
+
+  final _i19.Movie movie;
+}
+
+class AddProfileViewArguments {
+  const AddProfileViewArguments({
+    this.key,
+    this.nextRoute,
+    this.backIcon = false,
+  });
+
+  final _i17.Key? key;
+
+  final String? nextRoute;
+
+  final bool backIcon;
+}
+
+extension NavigatorStateExtension on _i20.NavigationService {
   Future<dynamic> navigateToStartupView([
     int? routerId,
     bool preventDuplicates = true,
@@ -272,28 +364,35 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToSelectProfileView([
+  Future<dynamic> navigateToSelectProfileView({
+    _i17.Key? key,
+    bool onlyEditClickedView = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.selectProfileView,
+        arguments: SelectProfileViewArguments(
+            key: key, onlyEditClickedView: onlyEditClickedView),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> navigateToEditProfileView([
+  Future<dynamic> navigateToEditProfileView({
+    _i17.Key? key,
+    required _i18.Profile profile,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.editProfileView,
+        arguments: EditProfileViewArguments(key: key, profile: profile),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -370,14 +469,17 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> navigateToMovieDetailsScreenView([
+  Future<dynamic> navigateToMovieDetailsScreenView({
+    _i17.Key? key,
+    required _i19.Movie movie,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return navigateTo<dynamic>(Routes.movieDetailsScreenView,
+        arguments: MovieDetailsScreenViewArguments(key: key, movie: movie),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -392,6 +494,39 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition,
   ]) async {
     return navigateTo<dynamic>(Routes.moreView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToAddProfileView({
+    _i17.Key? key,
+    String? nextRoute,
+    bool backIcon = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return navigateTo<dynamic>(Routes.addProfileView,
+        arguments: AddProfileViewArguments(
+            key: key, nextRoute: nextRoute, backIcon: backIcon),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> navigateToForgotPassView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return navigateTo<dynamic>(Routes.forgotPassView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -454,28 +589,35 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithSelectProfileView([
+  Future<dynamic> replaceWithSelectProfileView({
+    _i17.Key? key,
+    bool onlyEditClickedView = false,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.selectProfileView,
+        arguments: SelectProfileViewArguments(
+            key: key, onlyEditClickedView: onlyEditClickedView),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
         transition: transition);
   }
 
-  Future<dynamic> replaceWithEditProfileView([
+  Future<dynamic> replaceWithEditProfileView({
+    _i17.Key? key,
+    required _i18.Profile profile,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.editProfileView,
+        arguments: EditProfileViewArguments(key: key, profile: profile),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -552,14 +694,17 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition: transition);
   }
 
-  Future<dynamic> replaceWithMovieDetailsScreenView([
+  Future<dynamic> replaceWithMovieDetailsScreenView({
+    _i17.Key? key,
+    required _i19.Movie movie,
     int? routerId,
     bool preventDuplicates = true,
     Map<String, String>? parameters,
     Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
         transition,
-  ]) async {
+  }) async {
     return replaceWith<dynamic>(Routes.movieDetailsScreenView,
+        arguments: MovieDetailsScreenViewArguments(key: key, movie: movie),
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,
@@ -574,6 +719,39 @@ extension NavigatorStateExtension on _i15.NavigationService {
         transition,
   ]) async {
     return replaceWith<dynamic>(Routes.moreView,
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithAddProfileView({
+    _i17.Key? key,
+    String? nextRoute,
+    bool backIcon = false,
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  }) async {
+    return replaceWith<dynamic>(Routes.addProfileView,
+        arguments: AddProfileViewArguments(
+            key: key, nextRoute: nextRoute, backIcon: backIcon),
+        id: routerId,
+        preventDuplicates: preventDuplicates,
+        parameters: parameters,
+        transition: transition);
+  }
+
+  Future<dynamic> replaceWithForgotPassView([
+    int? routerId,
+    bool preventDuplicates = true,
+    Map<String, String>? parameters,
+    Widget Function(BuildContext, Animation<double>, Animation<double>, Widget)?
+        transition,
+  ]) async {
+    return replaceWith<dynamic>(Routes.forgotPassView,
         id: routerId,
         preventDuplicates: preventDuplicates,
         parameters: parameters,

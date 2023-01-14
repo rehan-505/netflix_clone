@@ -1,42 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
+import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'movie_details_screen_viewmodel.dart';
 
 class MovieDetailsScreenView extends StatelessWidget {
-  const MovieDetailsScreenView({Key? key}) : super(key: key);
+  const MovieDetailsScreenView({Key? key, required this.movie}) : super(key: key);
+  final Movie movie;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<MovieDetailsScreenViewModel>.reactive(
-      viewModelBuilder: () => MovieDetailsScreenViewModel(),
+      viewModelBuilder: () => MovieDetailsScreenViewModel(movie),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          backgroundColor: Colors.black12,
-          title: Row(
-            children: [
-              const Icon(Icons.arrow_back),
-              const Spacer(),
-              SvgPicture.asset(
-                "assets/images/svg/search.svg",
-                height: 25.h,
-              ),
-              30.horizontalSpace,
-
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(4.r),
-                  child: Image.asset(
-                    "assets/images/profile_avatars/blue.png",
-                    scale: 12.r,
-                  )),
-            ],
-          ),
-        ),
+        appBar: CustomAppBar(title: "",onBackPressed: (){
+          model.onBackPressed(context);
+        },showSearchIcon: true,profileImgPath: model.userService.currentProfile!.assetImg),
         backgroundColor: Theme.of(context).backgroundColor,
         body: SingleChildScrollView(
           child: Column(
@@ -45,9 +28,9 @@ class MovieDetailsScreenView extends StatelessWidget {
               Container(
                   height: 0.4.sh,
                   width: 1.sw,
-                  decoration: const BoxDecoration(
+                  decoration:  BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage("assets/posters/carole_and_tuesday.jpg"),
+                        image: NetworkImage(model.movie.imgUrl),
                       alignment: Alignment.topCenter,
                       fit: BoxFit.cover
 
@@ -62,20 +45,20 @@ class MovieDetailsScreenView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text("Stranger Things", style: headlineStyle,),
+                    Text(model.movie.title, style: headlineStyle,),
                     7.verticalSpace,
                     Row(
                       children: [
-                        Text("2007", style: captionStyleGrey.copyWith(color: Colors.white.withOpacity(0.8)),),
+                        Text(model.movie.releaseDate.year.toString(), style: captionStyleGrey.copyWith(color: Colors.white.withOpacity(0.8)),),
                         10.horizontalSpace,
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 4.r),
                             decoration: BoxDecoration(
                               color: Colors.grey[900]
                             ),
-                            child: Text("13+",style: captionStyleGrey)),
+                            child: Text("${movie.ageRating}+",style: captionStyleGrey)),
                         10.horizontalSpace,
-                        Text("2h 42m",style: captionStyleGrey),
+                        Text("${movie.length} minutes",style: captionStyleGrey),
                         10.horizontalSpace,
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 4.r),
@@ -128,7 +111,7 @@ class MovieDetailsScreenView extends StatelessWidget {
                       ),
                     ),
                     20.verticalSpace,
-                    Text("dummy "*40),
+                    Text("${movie.des} "*40),
                   ],
                 ),
               )

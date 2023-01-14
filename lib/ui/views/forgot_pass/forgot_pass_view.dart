@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/enums/auth_screen_type.dart';
-import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/shared_widgets/authentication_layout.dart';
 import 'package:netflix_clone/ui/shared_widgets/custom_text_field.dart';
 import 'package:stacked/stacked.dart';
 
-import 'login_viewmodel.dart';
+import 'forgot_pass_viewmodel.dart';
 
-class LoginView extends StatelessWidget {
-  const LoginView({Key? key}) : super(key: key);
+class ForgotPassView extends StatelessWidget {
+  const ForgotPassView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<LoginViewModel>.reactive(
-      viewModelBuilder: () => LoginViewModel(),
+    return ViewModelBuilder<ForgotPassViewModel>.reactive(
+      viewModelBuilder: () => ForgotPassViewModel(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: AuthenticationLayout(
-          onForgotPassPressed: model.navigateToForgotPass,
-          mainButtonTitle: "Sign In",
+          mainButtonTitle: "Send Reset Email",
           authScreenType: AuthScreenType.login,
-          onMainButtonPressed: model.saveData,
+          onMainButtonPressed: () async{
+            bool result = await model.saveData();
+            if(result){
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Reset Email Sent")));
+              print("Reset Email Sent");
+            }
+          },
           onBackPressed: model.navigateBack,
           busy: model.isBusy,
           form: Column(
             children: [
               CustomAuthTextField(
-                textInputAction: TextInputAction.next,
                 textEditingController: model.emailController,
                 onSubmit: model.onEmailFieldSubmit,
                 onTap: model.onEmailFieldTapped,
@@ -40,24 +42,6 @@ class LoginView extends StatelessWidget {
                 ),
                 onChanged: model.validateEmail,
               ),
-              15.verticalSpace,
-              CustomAuthTextField(
-                  textEditingController: model.passController,
-                  onSubmit: model.onPassFieldSubmit,
-                  onTap: model.onPassFieldTapped,
-                  focusNode: model.passFocusNode,
-                  obscureText: model.passVisible,
-                  labelText: "PASSWORD",
-                  errorText: model.passErrorText,
-                  onChanged: model.validatePass,
-                  suffixIcon: InkWell(
-                      onTap: model.eyePressed,
-                      child: Icon(
-                        Icons.remove_red_eye,
-                        color: model.passVisible
-                            ? Colors.grey
-                            : kcPrimaryColor.withOpacity(0.7),
-                      ))),
             ],
           ),
           showTerms: true,

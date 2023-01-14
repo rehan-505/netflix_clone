@@ -10,7 +10,7 @@ part 'app_user.freezed.dart';
 // But if Person was not serializable, we could skip it.
 part 'app_user.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class AppUser with _$AppUser {
   const factory AppUser({
     required String id,

@@ -7,11 +7,12 @@ import 'package:netflix_clone/ui/shared_widgets/custom_button.dart';
 import '../common/app_styles.dart';
 
 class AuthenticationLayout extends StatelessWidget {
-  const AuthenticationLayout({Key? key, this.onBackPressed, this.form, this.onMainButtonPressed, this.busy = false, required this.mainButtonTitle, required this.authScreenType,  this.alternateText, this.showTerms = false, this.validationMsg, this.onAlternateTextTapped}) : super(key: key);
+  const AuthenticationLayout({Key? key, this.onBackPressed, this.form, this.onMainButtonPressed, this.busy = false, required this.mainButtonTitle, required this.authScreenType,  this.alternateText, this.showTerms = false, this.validationMsg, this.onAlternateTextTapped, this.onForgotPassPressed}) : super(key: key);
 
   final void Function()? onBackPressed;
   final void Function()? onMainButtonPressed;
   final void Function()? onAlternateTextTapped;
+  final void Function()? onForgotPassPressed;
 
   final AuthScreenType authScreenType;
   final String mainButtonTitle;
@@ -54,6 +55,18 @@ class AuthenticationLayout extends StatelessWidget {
                     child: Text(validationMsg!,style: redStyle ,),
                   ),
                 CustomButton(mainButtonTitle: mainButtonTitle, busy: busy,onPressed: onMainButtonPressed ),
+                if(onForgotPassPressed != null)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 5.w),
+                      child: InkWell(
+                        onTap: onForgotPassPressed,
+                        child: Text("Forgot Password?", style: subtitleStyle.copyWith(color: white70Style16w600.color),),
+                      ),
+                    ),
+                  ),
+
                 50.verticalSpace,
                 if(alternateText!=null) Padding(
                   padding: EdgeInsets.only(bottom: 50.h),
@@ -65,13 +78,6 @@ class AuthenticationLayout extends StatelessWidget {
               ],
             ),
           ),
-
-
-
-
-
-
-
 
         ],
       ),

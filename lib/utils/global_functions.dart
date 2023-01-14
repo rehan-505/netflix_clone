@@ -32,7 +32,7 @@ String? generalValidation(String? value, {String fieldName = 'Field'}) {
   return null;
 }
 
-SvgPicture buildNLogo(){
-  return SvgPicture.asset("assets/images/svg/n_logo.svg", height: 45.h, width: 30.w, );
+SvgPicture buildNLogo({double? height, double? width}){
+  return SvgPicture.asset("assets/images/svg/n_logo.svg", height: height ?? 45.h, width: width ?? 30.w, );
 }
 

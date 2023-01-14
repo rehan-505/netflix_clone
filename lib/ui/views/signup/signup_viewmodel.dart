@@ -1,7 +1,11 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/app_user.dart';
 
+import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
+import '../../../services/current_user_service.dart';
 import '../../../utils/global_functions.dart';
 import '../../base/authentication_viewmodel.dart';
 
@@ -18,9 +22,11 @@ class SignupViewModel extends AuthenticationViewModel {
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passFocusNode = FocusNode();
 
+  final CurrentUserService _userService = locator<CurrentUserService>();
 
 
-  eyePressed(){
+
+  void eyePressed(){
 
     if(passFocusNode.hasFocus){
       passVisible = !passVisible;
@@ -30,7 +36,7 @@ class SignupViewModel extends AuthenticationViewModel {
 
 
   @override
-  Future runAuthentication() async{
+  Future<bool> runAuthentication() async{
 
     if(emailController.text.trim().isEmpty ) {
       emailErrorText = "Email is required";
@@ -46,8 +52,14 @@ class SignupViewModel extends AuthenticationViewModel {
     }
 
     if(await authService.signUpWithEmailAndPass(emailController.text, passController.text)){
-      navigationService.navigateTo(Routes.onBoardingView);
+
+      await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: emailController.text.trim(),));
+      navigationService.navigateTo(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
+      return true;
+
     }
+
+    return false;
   }
 
   void navigateToLogin() =>
@@ -60,9 +72,6 @@ class SignupViewModel extends AuthenticationViewModel {
   void validateEmail(String? x){
     emailErrorText = emailValidation(x);
     notifyListeners();
-
-
-
   }
 
   void validatePass(String? x){
@@ -95,5 +104,8 @@ class SignupViewModel extends AuthenticationViewModel {
     notifyListeners();
   }
 
+  void navigateBack(){
+    navigationService.back();
+  }
 
 }

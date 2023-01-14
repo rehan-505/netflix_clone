@@ -9,10 +9,10 @@ part 'movie.freezed.dart';
 // But if Person was not serializable, we could skip it.
 part 'movie.g.dart';
 
-@freezed
+@Freezed(makeCollectionsUnmodifiable: false)
 class Movie with _$Movie {
   const factory Movie({
-    required String? id,
+    required String id,
     required String title,
     required String des,
     required int length,     ///in minutes

@@ -44,6 +44,7 @@ TextStyle headlineStyle = TextStyle(
      fontWeight: FontWeight.bold,
      fontSize: 15.sp);
 
+ TextStyle normalStyleLowOpacity = TextStyle(color: Colors.white.withOpacity(0.7));
 
  TextStyle buttonHeadingStyle = TextStyle(
      color: Colors.white,

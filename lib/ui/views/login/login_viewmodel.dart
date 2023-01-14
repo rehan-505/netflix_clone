@@ -1,7 +1,11 @@
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/app_user.dart';
 
+import '../../../app/app.locator.dart';
 import '../../../app/app.router.dart';
+import '../../../services/current_user_service.dart';
 import '../../../utils/global_functions.dart';
 import '../../base/authentication_viewmodel.dart';
 
@@ -18,6 +22,9 @@ class LoginViewModel extends AuthenticationViewModel{
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passFocusNode = FocusNode();
 
+  final CurrentUserService _userService = locator<CurrentUserService>();
+
+
 
 
   eyePressed(){
@@ -30,7 +37,7 @@ class LoginViewModel extends AuthenticationViewModel{
 
 
   @override
-  Future runAuthentication() async{
+  Future<bool> runAuthentication() async{
 
     if(emailController.text.trim().isEmpty ) {
       emailErrorText = "Email is required";
@@ -46,15 +53,31 @@ class LoginViewModel extends AuthenticationViewModel{
     }
 
     if(await authService.signInWithEmailAndPass(emailController.text, passController.text)){
-      navigationService.navigateTo(Routes.selectProfileView);
+
+      ///if current user doesn't exist in db, create it
+      if(!(await _userService.currentUserExistsInDB())){
+        await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: FirebaseAuth.instance.currentUser!.email!));
+        navigationService.replaceWith(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
+
+      }
+      else{
+        await _userService.loadCurrentUser();
+        navigationService.replaceWith(Routes.selectProfileView);
+
+      }
+
+      return true;
+
     }
+
+    return false;
   }
 
   void navigateToSignUp() =>
       navigationService.replaceWith(Routes.signupView);
 
   void navigateToForgotPass() =>
-      navigationService.navigateTo(Routes.onBoardingView);
+      navigationService.navigateTo(Routes.forgotPassView);
 
 
   void validateEmail(String? x){
@@ -68,10 +91,6 @@ class LoginViewModel extends AuthenticationViewModel{
   void validatePass(String? x){
     passErrorText = passwordValidation(x);
     notifyListeners();
-  }
-
-  void navigateToPhoneScreen(){
-    // navigationService.navigateTo(Routes.phoneAuthView);
   }
 
   void onEmailFieldTapped(){
@@ -94,6 +113,11 @@ class LoginViewModel extends AuthenticationViewModel{
   void onPassFieldSubmit(String? v){
     notifyListeners();
   }
+
+  void navigateBack(){
+    navigationService.back();
+  }
+
 
 
 }
