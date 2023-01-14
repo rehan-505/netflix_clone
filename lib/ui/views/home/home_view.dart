@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 
-import '../../../utils/global_functions.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
+import 'bottom_sheet.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
@@ -15,8 +15,9 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HomeViewModel>.reactive(
+    return ViewModelBuilder<HomeViewModel>.nonReactive(
       viewModelBuilder: () => HomeViewModel(),
+      disposeViewModel: false,
       builder: (context, model, child) => Scaffold(
         backgroundColor: kcBackgroundColor,
         appBar: PreferredSize(
@@ -24,27 +25,7 @@ class HomeView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              AppBar(
-                elevation: 0,
-                backgroundColor: Colors.black12,
-                title: Row(
-                  children: [
-                    buildNLogo(),
-                    const Spacer(),
-                    SvgPicture.asset(
-                      "assets/images/svg/search.svg",
-                      height: 25.h,
-                    ),
-                    30.horizontalSpace,
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(4.r),
-                        child: Image.asset(
-                          model.userService.currentProfile!.assetImg,
-                          scale: 6.r,
-                        )),
-                  ],
-                ),
-              ),
+              CustomAppBar(title: "",profileImgPath: model.userService.currentProfile!.assetImg,showSearchIcon: true,showLogo: true),
               Row(
                 children: [
                   const Spacer(),
@@ -76,7 +57,7 @@ class HomeView extends StatelessWidget {
           return ListView(
             padding: EdgeInsets.zero,
             children: [
-              _buildMainPoster(context, model.posterMovie),
+              _buildMainPoster(context, model.posterMovie,model),
               _buildCategoryHorizontalList("Trending Now", context, model.getMovies.sublist(0,model.getMovies.length~/2),model: model ),
               30.verticalSpace,
               _buildCategoryHorizontalList("Award Winning", context,model.getMovies.sublist(model.getMovies.length~/2,model.getMovies.length),model: model),
@@ -92,7 +73,7 @@ class HomeView extends StatelessWidget {
     );
   }
 
-  Widget _buildMainPoster(BuildContext context,Movie movie) {
+  Widget _buildMainPoster(BuildContext context,Movie movie,HomeViewModel model) {
     return StreamBuilder(builder: (context,snapshot){
       return AspectRatio(
         aspectRatio: 0.66,
@@ -135,15 +116,12 @@ class HomeView extends StatelessWidget {
                   EdgeInsets.symmetric(horizontal: 50.w, vertical: 20.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      _buildSmallButton(Icons.add, "My List"),
+                    children:  [
+                      const PosterMovieAddIcon(),
+                      // _buildSmallButton(Icons.add, "My List"),
                       InkWell(
                         onTap: () {
-                          // PersistentNavBarNavigator.pushNewScreen(
-                          //   context,
-                          //   screen: MovieDetailsScreenView(),
-                          //   withNavBar: true, // OPTIONAL VALUE. True by default.
-                          // );
+                          model.playVideo();
                         },
                         child: Container(
                           padding: EdgeInsets.fromLTRB(6.w, 3.h, 12.w, 3.h),
@@ -259,108 +237,58 @@ class HomeView extends StatelessWidget {
       elevation: 0.35.sh,
         context: screenContext,
         builder: (context){
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(12.r),
-            topRight: Radius.circular(12.r),
-          )
-        ),
-        child: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                children: [
-                  ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Image.network(
-                        movie.imgUrl,
-                        height: 120.h,
-                        width: 80.w,
-                        fit: BoxFit.cover,
-                      )),
-                  10.horizontalSpace,
-                  Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
 
-                        children: [
-                          Text(movie.title, style: heading3Style,),
-                          5.verticalSpace,
-                          Row(
-                            children: [
-                               Text(movie.releaseDate.year.toString(), style: captionStyleGrey,),
-                              10.horizontalSpace,
-                               Text("${movie.ageRating.toString()}+",style: captionStyleGrey,),
-                              10.horizontalSpace,
-                              Text( movie.isSeason ? "New Episodes" : "New Release",style: captionStyleGrey,),
-                            ],
-                          ),
-                         5.verticalSpace,
-                          Text("${movie.des} "*20, style: captionStyleGrey.copyWith(color: Colors.white,),)
-                        ],
-                      )
-                   ),
-                ],
-              ),
-              25.verticalSpace,
-              Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 25.w),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    _buildSmallCircleButton(Icons.play_arrow, "Play" ,bgColor: Colors.white,iconColor: Colors.black),
-                    _buildSmallCircleButton(Icons.download, "Download"),
-                    _buildSmallCircleButton(Icons.check, "My List"),
-                    _buildSmallCircleButton(Icons.share_outlined, "Share"),
-                  ],
-                ),
-              ),
-              const Divider(
-                color: Colors.grey,
-              ),
-              InkWell(
-                onTap: (){
-                  model.detailsAndInfoTapped(movie);
-                },
-                child: Row(
-                  children: [
-                    const Icon(Icons.info_outline, color: Colors.white,),
-                    10.horizontalSpace,
-                    const Text("Details & Info"),
-                    const Spacer(),
-                    const Icon(Icons.arrow_forward_ios,color: Colors.white)
-                  ],
-                ),
-              ),
-              20.verticalSpace
-            ],
-          ),
-        ),
-      );
+          // return CustomBottomSheet(movie,screenContext, model: null,);
+
+
+          return  ViewModelBuilder<HomeViewModel>.reactive(
+           viewModelBuilder: () =>model,
+          builder: (context,model,_){
+            return CustomBottomSheet(movie,screenContext, model: model,);
+          },
+           disposeViewModel: false,
+
+
+         );
+
+
+
     });
   }
 
-  Widget _buildSmallCircleButton(IconData iconData,String title,{Color? bgColor,Color? iconColor}){
+
+
+}
+
+class PosterMovieAddIcon extends ViewModelWidget<HomeViewModel> {
+  const PosterMovieAddIcon({Key? key}) : super(key: key,reactive: true);
+
+  @override
+  Widget build(BuildContext context,HomeViewModel viewModel) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          padding: EdgeInsets.all(5.r),
-          decoration:  BoxDecoration(
-            color: bgColor ?? Colors.grey.withOpacity(0.2) ,
-            shape: BoxShape.circle,
+
+        InkWell(
+          onTap: (){
+            viewModel.handleAddToListClicked(viewModel.posterMovie);
+
+          },
+          child:             Icon(
+            viewModel.userService.movieExistsInProfileList(viewModel.posterMovie.id) ?
+            Icons.check : Icons.add,
+            color: Colors.white,
+            size: 28.h,
           ),
-          child: Icon(iconData, color: iconColor ?? Colors.white,),
-        ),
-        4.verticalSpace,
-        Text(title, style: captionStyleGrey.copyWith(fontWeight: FontWeight.w100),)
+        )
+
+
+        ,
+        5.verticalSpace,
+        Text(
+          "My List",
+          style: captionStyle11,
+        )
       ],
     );
   }
-
-
 }

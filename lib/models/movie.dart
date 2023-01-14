@@ -12,7 +12,7 @@ part 'movie.g.dart';
 @Freezed(makeCollectionsUnmodifiable: false)
 class Movie with _$Movie {
   const factory Movie({
-    required String? id,
+    required String id,
     required String title,
     required String des,
     required int length,     ///in minutes

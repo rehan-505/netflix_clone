@@ -18,10 +18,11 @@ class SignupView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         backgroundColor: kcBackgroundColor,
         body: AuthenticationLayout(
+
           mainButtonTitle: "Sign Up",
           authScreenType: AuthScreenType.signup,
           onMainButtonPressed: model.saveData,
-          onBackPressed: () {},
+          onBackPressed: model.navigateBack,
           busy: model.isBusy,
           form: Column(
             children: [

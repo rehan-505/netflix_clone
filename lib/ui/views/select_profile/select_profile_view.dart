@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netflix_clone/app/app.router.dart';
 import 'package:netflix_clone/models/profile.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../shared_widgets/custom_app_bar.dart';
 import 'select_profile_viewmodel.dart';
 
 class SelectProfileView extends StatelessWidget {
-  const SelectProfileView({Key? key}) : super(key: key);
+  const SelectProfileView({Key? key, this.onlyEditClickedView = false}) : super(key: key);
+  final bool onlyEditClickedView;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<SelectProfileViewModel>.reactive(
-      viewModelBuilder: () => SelectProfileViewModel(),
+      viewModelBuilder: () => SelectProfileViewModel(onyEditClickedView: onlyEditClickedView),
       builder: (context, model, child) => WillPopScope(
         onWillPop: model.willPopScope,
         child: Scaffold(
@@ -26,9 +25,20 @@ class SelectProfileView extends StatelessWidget {
               children: [
                 50.verticalSpace,
                 model.editClicked
-                    ? CustomAppBar(
-                        text: "Manage Profiles",
-                        onBackPressed: model.onBackPressed,
+                    ? Row(
+                        children: [
+                          InkWell(
+                              onTap: model.onBackPressed,
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              )),
+                          15.horizontalSpace,
+                          Text(
+                            "Manage Profiles",
+                            style: heading3Style,
+                          )
+                        ],
                       )
                     : _buildAppbarV2(model),
                 100.verticalSpace,
@@ -116,10 +126,10 @@ class SelectProfileView extends StatelessWidget {
                         ),
                       )
                     : InkWell(
-                  onTap: (){
-                    model.onProfileClicked(profile!);
-                  },
-                      child: Stack(
+                        onTap: () {
+                          model.onProfileClicked(profile!);
+                        },
+                        child: Stack(
                           alignment: Alignment.center,
                           children: [
                             ClipRRect(
@@ -147,7 +157,7 @@ class SelectProfileView extends StatelessWidget {
                               )
                           ],
                         ),
-                    ),
+                      ),
                 8.verticalSpace,
                 Text(
                   isLastIndex ? "Add Profile" : profile!.name,

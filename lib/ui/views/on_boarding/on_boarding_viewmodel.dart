@@ -12,17 +12,16 @@ class OnBoardingViewModel extends BaseViewModel {
   modifyIndex(int index){
 
     currentIndex = index;
-    print(index);
 
     notifyListeners();
   }
 
   void navigateToLogin(){
-    _navigationService.replaceWith(Routes.loginView);
+    _navigationService.navigateTo(Routes.loginView);
   }
 
   void navigateToSignup(){
-    _navigationService.replaceWith(Routes.signupView);
+    _navigationService.navigateTo(Routes.signupView);
   }
 
 

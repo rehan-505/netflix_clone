@@ -37,7 +37,7 @@ class LoginViewModel extends AuthenticationViewModel{
 
 
   @override
-  Future runAuthentication() async{
+  Future<bool> runAuthentication() async{
 
     if(emailController.text.trim().isEmpty ) {
       emailErrorText = "Email is required";
@@ -66,14 +66,18 @@ class LoginViewModel extends AuthenticationViewModel{
 
       }
 
+      return true;
+
     }
+
+    return false;
   }
 
   void navigateToSignUp() =>
       navigationService.replaceWith(Routes.signupView);
 
   void navigateToForgotPass() =>
-      navigationService.navigateTo(Routes.onBoardingView);
+      navigationService.navigateTo(Routes.forgotPassView);
 
 
   void validateEmail(String? x){
@@ -87,10 +91,6 @@ class LoginViewModel extends AuthenticationViewModel{
   void validatePass(String? x){
     passErrorText = passwordValidation(x);
     notifyListeners();
-  }
-
-  void navigateToPhoneScreen(){
-    // navigationService.navigateTo(Routes.phoneAuthView);
   }
 
   void onEmailFieldTapped(){
@@ -113,6 +113,11 @@ class LoginViewModel extends AuthenticationViewModel{
   void onPassFieldSubmit(String? v){
     notifyListeners();
   }
+
+  void navigateBack(){
+    navigationService.back();
+  }
+
 
 
 }

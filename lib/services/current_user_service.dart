@@ -6,8 +6,10 @@ import 'package:netflix_clone/models/app_user.dart';
 import 'package:netflix_clone/models/profile.dart';
 
 class CurrentUserService {
-  AppUser? myUser;
+  AppUser? _myUser;
   Profile? currentProfile;
+
+  AppUser? get myUser => _myUser;
 
 
   Future<void> loadCurrentUser() async{
@@ -17,7 +19,7 @@ class CurrentUserService {
               .collection("users")
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .get();
-      myUser = AppUser.fromJson(documentSnapshot.data()!);
+      _myUser = AppUser.fromJson(documentSnapshot.data()!);
     }
     catch(e){
       if (kDebugMode) {
@@ -32,7 +34,7 @@ class CurrentUserService {
   }
 
   Future<void> updateCurrentUser(AppUser user) async{
-    myUser = user;
+    _myUser = user;
     await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(user.toJson());
   }
 
@@ -47,10 +49,8 @@ class CurrentUserService {
           .update({'profiles': FieldValue.arrayUnion(temp)});
 
       if(myUser!.profiles.length==1){
-        currentProfile=profile;
+        currentProfile=myUser!.profiles[0];
       }
-
-
     }
     catch(e){
       if (kDebugMode) {
@@ -83,7 +83,7 @@ class CurrentUserService {
 
 
   String getNewProfileImgPath(){
-    return "assets/images/profile_avatars/img_${myUser!.profiles.length}.png";
+    return "assets/images/profile_avatars/img_${getAvailableProfileSlot()}.png";
   }
 
   Future renameProfile(Profile prof) async{
@@ -96,22 +96,72 @@ class CurrentUserService {
       }
     }
 
-
-    await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
-      "profiles" : myUser!.profiles.map((e) => e.toJson()).toList()
-    });
+    await updateProfilesInDB();
 
   }
 
-  ///return 1 slot out of 5
-  // int getAvailableProfileSlot() {
-  //   for(int i=0; i<5;i++){
-  //     if(!(myUser!.profiles[i].id.contains(i.toString()))){
-  //       return i;
-  //     }
-  //   }
-  //
-  //   return 99;
-  // }
+  Future addMovieToProfile( String movieId) async{
+    currentProfile!.moviesList.add(movieId);
+
+    await updateProfilesInDB();
+
+
+  }
+
+
+  Future removeMovieFromProfile( String movieId) async{
+    currentProfile!.moviesList.remove(movieId);
+
+
+    for (int i=0; i<myUser!.profiles.length; i++) {
+      if(myUser!.profiles[i].id==currentProfile!.id){
+        myUser!.profiles[i].moviesList.removeWhere((element) => element==movieId);
+        break;
+      }
+    }
+
+    await updateProfilesInDB();
+
+  }
+
+
+  Future<void> updateProfilesInDB() async{
+    await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
+      "profiles" : myUser!.profiles.map((e) => e.toJson()).toList()
+    });
+  }
+
+  bool movieExistsInProfileList(String id){
+    return currentProfile!.moviesList.contains(id);
+  }
+
+  void changeCurrentProfile(Profile profile){
+
+    for(int i=0; i<myUser!.profiles.length; i++){
+      if(myUser!.profiles[i].id==profile.id){
+        currentProfile = myUser!.profiles[i];
+        break;
+      }
+    }
+
+  }
+
+  ///return 1 slot out of total 5 available
+  int getAvailableProfileSlot() {
+    late String profileId;
+    int availableSlot = myUser!.profiles.length;
+
+    ///return smallest free slot
+    for(int i=0; i<myUser!.profiles.length;i++){
+      profileId = "profile_$i";
+      if(!(myUser!.profiles.any((element) => element.id==profileId))){
+        availableSlot = i;
+        break;
+      }
+    }
+
+    return availableSlot;
+  }
+
 
 }

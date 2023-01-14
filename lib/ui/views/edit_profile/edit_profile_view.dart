@@ -29,14 +29,14 @@ class EditProfileView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         backgroundColor: kcBackgroundColor,
         appBar: AppBar(
-          // actions: [
-          //   InkWell(
-          //       onTap: (){
-          //         model.deleteProfile();
-          //       },
-          //       child: const Icon(Icons.delete_forever, color: Colors.red,)),
-          //   30.horizontalSpace,
-          // ],
+          actions: [
+            // InkWell(
+            //     onTap: (){
+            //       model.deleteProfile();
+            //     },
+            //     child: const Icon(Icons.delete_forever, color: Colors.red,)),
+            30.horizontalSpace,
+          ],
           title: Text("Edit Profile", style: heading3Style,),
           elevation: 0,
           backgroundColor: kcBackgroundColor,

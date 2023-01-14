@@ -15,6 +15,12 @@ import 'package:netflix_clone/ui/views/search/search_view.dart';
 import 'package:netflix_clone/ui/views/coming_soon/coming_soon_view.dart';
 import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
 import 'package:netflix_clone/ui/views/more/more_view.dart';
+
+import '../services/bottom_navbar_service.dart';
+import '../services/current_user_service.dart';
+import 'package:netflix_clone/ui/views/add_profile/add_profile_view.dart';
+
+import 'package:netflix_clone/ui/views/forgot_pass/forgot_pass_view.dart';
 // @stacked-import
 
 @StackedApp(routes: [
@@ -31,12 +37,15 @@ MaterialRoute(page: SearchView),
 MaterialRoute(page: ComingSoonView),
 MaterialRoute(page: MovieDetailsScreenView),
 MaterialRoute(page: MoreView),
+MaterialRoute(page: AddProfileView),
+MaterialRoute(page: ForgotPassView),
 // @stacked-route
 ], dependencies: [
   LazySingleton(classType: NavigationService),
   LazySingleton(classType: AuthService),
-  LazySingleton(classType: BottomSheetService),
-  LazySingleton(classType: DashboardViewModel)
+  LazySingleton(classType: CurrentUserService),
+  // LazySingleton(classType: DashboardViewModel),
+  LazySingleton(classType: BottomNavbarService)
 
   // LazySingleton(classType: DialogService),
   // @stacked-service

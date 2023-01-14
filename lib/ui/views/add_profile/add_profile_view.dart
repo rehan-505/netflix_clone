@@ -34,9 +34,7 @@ class AddProfileView extends StatelessWidget {
           backgroundColor: kcBackgroundColor,
           automaticallyImplyLeading: false,
           leading: backIcon ? InkWell(
-              onTap: (){
-                model.navigationService.back(result: false);
-              },
+              onTap: model.navBack,
               child: const Icon(Icons.arrow_back)) : null,
         ),
         backgroundColor: kcBackgroundColor,

@@ -36,7 +36,7 @@ class SignupViewModel extends AuthenticationViewModel {
 
 
   @override
-  Future runAuthentication() async{
+  Future<bool> runAuthentication() async{
 
     if(emailController.text.trim().isEmpty ) {
       emailErrorText = "Email is required";
@@ -55,9 +55,11 @@ class SignupViewModel extends AuthenticationViewModel {
 
       await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: emailController.text.trim(),));
       navigationService.navigateTo(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
-
+      return true;
 
     }
+
+    return false;
   }
 
   void navigateToLogin() =>
@@ -102,5 +104,8 @@ class SignupViewModel extends AuthenticationViewModel {
     notifyListeners();
   }
 
+  void navigateBack(){
+    navigationService.back();
+  }
 
 }

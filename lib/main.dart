@@ -4,6 +4,7 @@ import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/views/dashboard/dashboard_view.dart';
 import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
+import 'package:netflix_clone/ui/views/startup/startup_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,8 +14,6 @@ void main() async{
 
 
   setupLocator();
-  // setupDialogUi();
-  // setupBottomSheetUi();
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -54,7 +53,7 @@ class MyApp extends StatelessWidget {
             // initialRoute: Routes.onBoardingView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,
-            home: const DashboardView(),
+            // home: const StartupView(),
           );
         });
   }

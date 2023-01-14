@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
+import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -16,29 +17,9 @@ class MovieDetailsScreenView extends StatelessWidget {
     return ViewModelBuilder<MovieDetailsScreenViewModel>.reactive(
       viewModelBuilder: () => MovieDetailsScreenViewModel(movie),
       builder: (context, model, child) => Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-          backgroundColor: Colors.black12,
-          title: Row(
-            children: [
-              const Icon(Icons.arrow_back),
-              const Spacer(),
-              SvgPicture.asset(
-                "assets/images/svg/search.svg",
-                height: 25.h,
-              ),
-              30.horizontalSpace,
-
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(4.r),
-                  child: Image.asset(
-                    "assets/images/profile_avatars/img_0.png",
-                    scale: 12.r,
-                  )),
-            ],
-          ),
-        ),
+        appBar: CustomAppBar(title: "",onBackPressed: (){
+          model.onBackPressed(context);
+        },showSearchIcon: true,profileImgPath: model.userService.currentProfile!.assetImg),
         backgroundColor: Theme.of(context).backgroundColor,
         body: SingleChildScrollView(
           child: Column(

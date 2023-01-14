@@ -11,11 +11,24 @@ class SelectProfileViewModel extends BaseViewModel {
   final navigationService = locator<NavigationService>();
   final CurrentUserService userService = locator<CurrentUserService>();
 
+  SelectProfileViewModel({this.onyEditClickedView = false}){
+    editClicked = onyEditClickedView;
+  }
+
+  final bool onyEditClickedView;
+
   bool editClicked = false;
 
 
 
   void onBackPressed(){
+    if(onyEditClickedView){
+      navigationService.back();
+      return;
+    }
+
+    ///else
+
     if(editClicked){
       editClicked=false;
       notifyListeners();
@@ -27,6 +40,13 @@ class SelectProfileViewModel extends BaseViewModel {
 
 
   Future<bool> willPopScope()async{
+
+    if(onyEditClickedView){
+      return true;
+    }
+
+    ///else
+
     if (editClicked){
       editClicked = false;
       notifyListeners();
@@ -42,10 +62,19 @@ class SelectProfileViewModel extends BaseViewModel {
 
   void onProfileClicked(Profile profile) async{
 
+    if(onyEditClickedView){
+      await navigationService.navigateToEditProfileView(profile: profile,);
+      notifyListeners();
+      return;
+    }
+
+
+
+    ///else
     if(editClicked){
 
       editClicked=false;
-      await navigationService.navigateToEditProfileView(profile: profile);
+      await navigationService.navigateToEditProfileView(profile: profile,);
       notifyListeners();
     }
 
@@ -54,7 +83,6 @@ class SelectProfileViewModel extends BaseViewModel {
       navigationService.replaceWith(Routes.dashboardView);
     }
 
-    // navigationService.;
   }
 
   onAddProfileTapped() async{

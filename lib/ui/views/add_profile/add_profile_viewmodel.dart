@@ -3,15 +3,16 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:flutter/material.dart';
 import '../../../app/app.locator.dart';
-import '../../../app/app.router.dart';
 import '../../../services/current_user_service.dart';
 import '../../../utils/global_functions.dart';
 
 class AddProfileViewModel extends BaseViewModel {
 
-  final NavigationService navigationService = locator<NavigationService>();
-  final CurrentUserService userService = locator<CurrentUserService>();
+  final NavigationService _navigationService = locator<NavigationService>();
+  final CurrentUserService _userService = locator<CurrentUserService>();
   final String? nextRoute;
+
+  CurrentUserService get userService => _userService;
 
   AddProfileViewModel({this.nextRoute});
 
@@ -21,7 +22,7 @@ class AddProfileViewModel extends BaseViewModel {
   final TextEditingController controller = TextEditingController();
 
   void getImgPath(){
-    imgPath = userService.getNewProfileImgPath();
+    imgPath = _userService.getNewProfileImgPath();
   }
 
   Future<void> saveData() async{
@@ -40,13 +41,13 @@ class AddProfileViewModel extends BaseViewModel {
 
 
 
-    await runBusyFuture(userService.addProfile(Profile(id: "profile_${userService.myUser!.profiles.length}", assetImg: userService.getNewProfileImgPath(), name: controller.text, moviesList: [])));
+    await runBusyFuture(_userService.addProfile(Profile(id: "profile_${_userService.getAvailableProfileSlot()}", assetImg: _userService.getNewProfileImgPath(), name: controller.text, moviesList: [])));
 
     if(nextRoute!=null){
-      navigationService.replaceWith(nextRoute!);
+      _navigationService.replaceWith(nextRoute!);
     }
     else{
-      navigationService.back(result: true);
+      _navigationService.back(result: true);
     }
 
 
@@ -58,6 +59,9 @@ class AddProfileViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  void navBack(){
+    _navigationService.back(result: false);
+  }
 
   @override
   void dispose() {

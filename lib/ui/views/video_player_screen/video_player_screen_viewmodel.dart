@@ -42,6 +42,9 @@ class VideoPlayerScreenViewModel extends BaseViewModel {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    chewieController?.dispose();
+    videoPlayerController.dispose();
+
     // TODO: implement dispose
     super.dispose();
   }

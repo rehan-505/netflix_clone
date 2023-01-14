@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
+import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
 import 'package:flutter_svg/svg.dart';
 import 'coming_soon_viewmodel.dart';
@@ -16,26 +17,7 @@ class ComingSoonView extends StatelessWidget {
       viewModelBuilder: () => ComingSoonViewModel(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.black12,
-          title: Row(
-            children: [
-              Text(
-                "New & Hot",
-                style: heading3Style,
-              ),
-              // const Icon(Icons.arrow_back),
-              const Spacer(),
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(4.r),
-                  child: Image.asset(
-                    model.userService.currentProfile!.assetImg,
-                    scale: 6.r,
-                  )),
-            ],
-          ),
-        ),
+        appBar: CustomAppBar(title: "New & Hot",profileImgPath: model.userService.currentProfile!.assetImg,),
         body: StreamBuilder(
           stream: model.stream,
           builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot){
