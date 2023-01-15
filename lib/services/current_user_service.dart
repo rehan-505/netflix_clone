@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:netflix_clone/models/app_user.dart';
 import 'package:netflix_clone/models/profile.dart';
 
+import '../models/movie.dart';
+
 class CurrentUserService {
   AppUser? _myUser;
   Profile? currentProfile;
@@ -105,7 +107,6 @@ class CurrentUserService {
 
     await updateProfilesInDB();
 
-
   }
 
 
@@ -135,6 +136,18 @@ class CurrentUserService {
     return currentProfile!.moviesList.contains(id);
   }
 
+  List<Movie> getMyListMovies(List<Movie> allMovies){
+    return allMovies.where((Movie element) => currentProfile!.moviesList.contains(element.id.toString())).toList();
+  }
+
+  List<Movie> getMyListMoviesFromUser(AppUser user,List<Movie> allMovies){
+    Profile profile = user.profiles.where((element) => element.id==currentProfile!.id).first;
+    return allMovies.where((Movie element) => profile.moviesList.contains(element.id.toString())).toList();
+  }
+
+
+
+
   void changeCurrentProfile(Profile profile){
 
     for(int i=0; i<myUser!.profiles.length; i++){
@@ -163,5 +176,16 @@ class CurrentUserService {
     return availableSlot;
   }
 
+
+  Future signOut() async{
+    await FirebaseAuth.instance.signOut();
+    _clearUserData();
+  }
+
+  void _clearUserData(){
+    _myUser = null;
+    currentProfile = null;
+    return;
+  }
 
 }

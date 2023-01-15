@@ -16,8 +16,8 @@ class MoreViewModel extends BaseViewModel {
   CurrentUserService get userService => _userService;
 
 
-  logout() async{
-    await runBusyFuture((FirebaseAuth.instance.signOut()),);
+  void logout() async{
+    await runBusyFuture(userService.signOut());
     _navigationService.clearStackAndShow(Routes.onBoardingView);
   }
 

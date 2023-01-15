@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netflix_clone/ui/views/home/home_viewmodel.dart';
 
 import '../../../models/movie.dart';
 import '../../common/app_styles.dart';
 
 class CustomBottomSheet extends StatelessWidget {
-  const CustomBottomSheet(this.movie, this.parentContext, {Key? key, required this.model}) : super(key: key);
+  const CustomBottomSheet(this.movie, this.parentContext, {Key? key,
+    required this.onAddToListPressed, required this.onPlayPressed, required this.onDownloadPressed, required this.downloadPressed, required this.movieAddedToList, required this.onDetailsAndInfoTap}) : super(key: key);
 
   final Movie movie;
-  final HomeViewModel model;
   final BuildContext parentContext;
+  final void Function() onAddToListPressed;
+  final void Function() onPlayPressed;
+  final void Function() onDownloadPressed;
+  final void Function() onDetailsAndInfoTap;
+  final bool downloadPressed;
+  final bool movieAddedToList;
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +76,9 @@ class CustomBottomSheet extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _buildSmallCircleButton(Icons.play_arrow, "Play" ,bgColor: Colors.white,iconColor: Colors.black),
-                  _buildSmallCircleButton(Icons.download, "Download"),
-                  _buildSmallCircleButton(model.userService.movieExistsInProfileList(movie.id) ? Icons.check : Icons.add, "My List",onTap: (){
-                    model.handleAddToListClicked(movie);
-                  }),
+                  _buildSmallCircleButton(Icons.play_arrow, "Play" ,bgColor: Colors.white,iconColor: Colors.black,onTap: onPlayPressed),
+                  _buildSmallCircleButton(downloadPressed ? Icons.check : Icons.download, "Download",onTap: onDownloadPressed),
+                  _buildSmallCircleButton(movieAddedToList ? Icons.check : Icons.add, "My List",onTap: onAddToListPressed),
                   _buildSmallCircleButton(Icons.share_outlined, "Share"),
                 ],
               ),
@@ -80,9 +87,7 @@ class CustomBottomSheet extends StatelessWidget {
               color: Colors.grey,
             ),
             InkWell(
-              onTap: (){
-                model.detailsAndInfoTapped(movie,parentContext);
-              },
+              onTap: onDetailsAndInfoTap,
               child: Row(
                 children: [
                   const Icon(Icons.info_outline, color: Colors.white,),

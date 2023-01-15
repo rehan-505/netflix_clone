@@ -1,7 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/app/app.router.dart';
+import 'package:netflix_clone/enums/movie_category.dart';
+import 'package:netflix_clone/models/app_user.dart';
+import 'package:netflix_clone/services/download_service.dart';
 import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -12,8 +18,11 @@ class HomeViewModel extends StreamViewModel {
 
   final NavigationService _navigationService = locator<NavigationService>();
 
-  final List<Movie> _movies = [];
+  final List<Movie> _filteredMovies = [];
+  final List<Movie> _releasedMovies = [];
   late Movie _posterMovie;
+
+  bool downloadPressed = false;
 
   Movie get posterMovie => _posterMovie;
 
@@ -21,24 +30,38 @@ class HomeViewModel extends StreamViewModel {
 
   CurrentUserService get userService => _userService;
 
+  final DownloadService _downloadService = locator<DownloadService>();
+
+  ///for my list
+  Stream<DocumentSnapshot<Map<String,dynamic>>> get userStream => FirebaseFirestore.instance.collection('users').doc(userService.myUser!.id).snapshots();
+
+
   @override
   Stream<QuerySnapshot<Map<String,dynamic>>> get stream => FirebaseFirestore.instance.collection('movies').snapshots();
 
   void fillList(List<QueryDocumentSnapshot<Map<String,dynamic>>> docs){
-    _movies.clear();
+    _filteredMovies.clear();
+    _releasedMovies.clear();
     for (var element in docs) {
-      _movies.add(Movie.fromJson(element.data()));
+      _filteredMovies.add(Movie.fromJson(element.data()));
+      _releasedMovies.add(Movie.fromJson(element.data()));
+
+
     }
 
-    _posterMovie = _movies.where((element) => element.id=='poster').first;
+    _posterMovie = _filteredMovies.where((element) => element.id=='poster').first;
 
-    _movies.removeWhere((element) => element.releaseDate.isAfter(DateTime.now()));
-    _movies.removeWhere((element) => element.id=='poster');
+    _filteredMovies.removeWhere((element) => element.releaseDate.isAfter(DateTime.now()));
+    _releasedMovies.removeWhere((element) => element.releaseDate.isAfter(DateTime.now()));
+
+    _filteredMovies.removeWhere((element) => element.id=='poster');
 
 
   }
 
-  List<Movie> get getMovies  => _movies;
+  List<Movie> get getFilteredMovies  => _filteredMovies;
+  List<Movie> get getReleasedMovies  => _releasedMovies;
+
 
   void detailsAndInfoTapped(Movie movie,BuildContext context){
     _navigationService.back();
@@ -49,8 +72,25 @@ class HomeViewModel extends StreamViewModel {
 
   }
 
-  void playVideo(){
-    _navigationService.navigateTo(Routes.videoPlayerScreenView);
+  void navigateBack(){
+    _navigationService.back();
+  }
+
+  void navigateToCategoryScreen(MovieCategory movieCategory){
+    navigateBack();
+    _navigationService.navigateToSpecificCategoryView(movieCategory: movieCategory, movies: _releasedMovies.where((element) => element.category==movieCategory.name).toList());
+  }
+
+  List<Movie> getUpdatedMyList(DocumentSnapshot<Map<String,dynamic>> snapshot){
+    AppUser appUser = AppUser.fromJson(snapshot.data()!);
+    return _userService.getMyListMoviesFromUser(appUser, _releasedMovies);
+  }
+
+  void playVideo(Movie movie,{bool popSheet = false, BuildContext? context}){
+    if(popSheet){
+      Navigator.pop(context!);
+    }
+    _navigationService.navigateToVideoPlayerScreenView(movieLink: movie.videoUrl);
   }
 
   void handleAddToListClicked(Movie movie){
@@ -60,6 +100,24 @@ class HomeViewModel extends StreamViewModel {
     else{
       _addMovieToProfile(movie.id);
     }
+  }
+
+  void initializeDownload(){
+    _downloadService.initialize();
+  }
+
+  Future downloadMovie(Movie movie) async{
+
+    if(!downloadPressed){
+      downloadPressed = true;
+      _downloadService.downloadMovie(movie.videoUrl,fileName: movie.title);
+      notifyListeners();
+    }
+
+  }
+
+  void makeDownloadPressedFalse(){
+    downloadPressed = false;
   }
 
   void _addMovieToProfile(String id){
@@ -72,5 +130,11 @@ class HomeViewModel extends StreamViewModel {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+
+    _downloadService.dispose();
+    super.dispose();
+  }
 
 }
