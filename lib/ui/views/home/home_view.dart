@@ -7,9 +7,9 @@ import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:netflix_clone/utils/extensions.dart';
 import 'package:stacked/stacked.dart';
 
+import '../../bottom_sheets/movie_sheet/movie_sheet.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
-import 'bottom_sheet.dart';
 import 'home_viewmodel.dart';
 
 class HomeView extends StatelessWidget {
@@ -328,7 +328,7 @@ class HomeView extends StatelessWidget {
           return  ViewModelBuilder<HomeViewModel>.reactive(
            viewModelBuilder: () =>model,
           builder: (context,model,_){
-            return CustomBottomSheet(
+            return MovieBottomSheet(
               movie,screenContext,
               onPlayPressed: (){model.playVideo(movie,popSheet: true,context: context);},
               downloadPressed: model.downloadPressed,

@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../models/movie.dart';
 import '../../common/app_styles.dart';
 
-class CustomBottomSheet extends StatelessWidget {
-  const CustomBottomSheet(this.movie, this.parentContext, {Key? key,
+class MovieBottomSheet extends StatelessWidget {
+  const MovieBottomSheet(this.movie, this.parentContext, {Key? key,
     required this.onAddToListPressed, required this.onPlayPressed, required this.onDownloadPressed, required this.downloadPressed, required this.movieAddedToList, required this.onDetailsAndInfoTap}) : super(key: key);
 
   final Movie movie;
