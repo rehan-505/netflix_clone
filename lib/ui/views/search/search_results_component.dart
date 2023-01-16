@@ -12,15 +12,9 @@ class SearchResultBody extends ViewModelWidget<SearchViewModel> {
   Widget build(BuildContext context,SearchViewModel viewModel) {
     return Expanded(
         child: ListView.builder(
-            itemCount: viewModel.movies.length,
+            itemCount: viewModel.searchResultMovies.length,
             itemBuilder: (context,index){
-
-              if(viewModel.textEditingController.text.trim().isEmpty ||  (viewModel.movies[index].title.toLowerCase().startsWith(viewModel.textEditingController.text.toLowerCase()))){
-                return _buildSearchResultTile(viewModel.movies[index]);
-              }
-
-
-              return const SizedBox();
+              return _buildSearchResultTile(viewModel.searchResultMovies[index]);
             }));
   }
 

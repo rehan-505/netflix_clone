@@ -12,13 +12,18 @@ class SearchViewModel extends StreamViewModel {
 
   FocusNode get focusNode => _focusNode;
   TextEditingController get textEditingController => _textEditingController;
+  String searchText = '';
 
 
   final CurrentUserService userService = locator<CurrentUserService>();
 
   final List<Movie> _movies = [];
+  List<Movie> _searchResultMovies = [];
 
-  List<Movie> get movies => _movies;
+
+  // List<Movie> get movies => _movies;
+  List<Movie> get searchResultMovies => _searchResultMovies;
+
 
 
   @override
@@ -30,15 +35,30 @@ class SearchViewModel extends StreamViewModel {
     for (var element in docs) {
       _movies.add(Movie.fromJson(element.data()));
     }
-
     _movies.removeWhere((element) => element.releaseDate.isAfter(DateTime.now()));
-    _movies.removeWhere((element) => element.id=='poster');
-
+    fillSearchResultMovies();
 
   }
 
   void onChanged(String value){
+    fillSearchResultMovies();
+    searchText = textEditingController.text;
     notifyListeners();
+  }
+
+  void fillSearchResultMovies(){
+    if(_textEditingController.text.isEmpty){
+      _searchResultMovies = List<Movie>.from(_movies);
+      return;
+    }
+    else {
+      if(textEditingController.text.length < searchText.length){
+        _searchResultMovies = List<Movie>.from(_movies.where((element) => element.title.toLowerCase().contains(_textEditingController.text.toLowerCase())));
+      }
+      else{
+        _searchResultMovies.removeWhere((element) => !(element.title.toLowerCase().contains(_textEditingController.text.toLowerCase())));
+      }
+    }
   }
 
 }

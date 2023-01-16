@@ -18,110 +18,112 @@ class MoreView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: "Profiles & More"),
         backgroundColor: Theme.of(context).backgroundColor,
-        body: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: 10.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              20.verticalSpace,
-              SizedBox(
-                height: 100.h,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                    itemCount: (!(model.userService.myUser!.profiles.length > 4))
-                        ? model.userService.myUser!.profiles.length + 1
-                        : model.userService.myUser!.profiles.length,
-                    itemBuilder: (context, index) {
+        body: SingleChildScrollView(
+          child: Padding(
+            padding:  EdgeInsets.symmetric(horizontal: 10.w),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                20.verticalSpace,
+                SizedBox(
+                  height: 100.h,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.horizontal,
+                      itemCount: (!(model.userService.myUser!.profiles.length > 4))
+                          ? model.userService.myUser!.profiles.length + 1
+                          : model.userService.myUser!.profiles.length,
+                      itemBuilder: (context, index) {
 
-                      Profile? profile;
+                        Profile? profile;
 
-                      bool isLastIndex =
-                      (index == model.userService.myUser!.profiles.length);
+                        bool isLastIndex =
+                        (index == model.userService.myUser!.profiles.length);
 
-                      if (!isLastIndex) {
-                        profile = model.userService.myUser!.profiles[index];
-                      }
+                        if (!isLastIndex) {
+                          profile = model.userService.myUser!.profiles[index];
+                        }
 
-                      bool selectedProfile = model.userService.currentProfile!.id==profile?.id;
+                        bool selectedProfile = model.userService.currentProfile!.id==profile?.id;
 
 
-                      return Padding(
-                        padding:  EdgeInsets.only(right: 10.w ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            isLastIndex
-                                ? InkWell(onTap: model.navigateToAddProfile,
+                        return Padding(
+                          padding:  EdgeInsets.only(right: 10.w ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              isLastIndex
+                                  ? InkWell(onTap: model.navigateToAddProfile,
 
-                                  child: Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color: Colors.grey, width: 0.5),
-                                          borderRadius: BorderRadius.circular(7.r)),
-                                      height: 60.h,
-                                      width: 60.h,
-                                      child: Center(
-                                          child: Icon(
-                                        Icons.add,
-                                        size: 60.h,
-                                        color: Colors.white,
-                                      )),
-                                    ),
-                                )
-                                : InkWell(
-                                 onTap: (){
-                                   model.changeCurrentProfile(profile!);
-                                 },
-                                  child: Container(
-                                    height: selectedProfile ? 65.h : 60.h,
-                                    width: selectedProfile ? 65.h : 60.h,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage(profile!.assetImg),
-                                        fit: BoxFit.cover,
+                                    child: Container(
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                color: Colors.grey, width: 0.5),
+                                            borderRadius: BorderRadius.circular(7.r)),
+                                        height: 60.h,
+                                        width: 60.h,
+                                        child: Center(
+                                            child: Icon(
+                                          Icons.add,
+                                          size: 60.h,
+                                          color: Colors.white,
+                                        )),
                                       ),
-                                      border: Border.all(color: Colors.white,width: selectedProfile ? 3.r : 0),
-                                      borderRadius: BorderRadius.circular(4.r),
+                                  )
+                                  : InkWell(
+                                   onTap: (){
+                                     model.changeCurrentProfile(profile!);
+                                   },
+                                    child: Container(
+                                      height: selectedProfile ? 65.h : 60.h,
+                                      width: selectedProfile ? 65.h : 60.h,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: AssetImage(profile!.assetImg),
+                                          fit: BoxFit.cover,
+                                        ),
+                                        border: Border.all(color: Colors.white,width: selectedProfile ? 3.r : 0),
+                                        borderRadius: BorderRadius.circular(4.r),
+                                      ),
                                     ),
                                   ),
-                                ),
-                            (selectedProfile ? 5 : 10).verticalSpace,
-                            Text(
-                              isLastIndex ? "Add" :
-                              profile!.name,
-                              style: captionStyleGrey,
-                            )
-                          ],
-                        ),
-                      );
-                    }),
-              ),
-              20.verticalSpace,
-              InkWell(
-                onTap: model.navigateToManageProfile,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset("assets/images/svg/edit_icon.svg"),
-                    8.horizontalSpace,
-                    Text("Manage Profiles", style: heading3Style.copyWith(fontSize: 16.sp,color: Colors.white.withOpacity(0.8)),),
-                  ],
+                              (selectedProfile ? 5 : 10).verticalSpace,
+                              Text(
+                                isLastIndex ? "Add" :
+                                profile!.name,
+                                style: captionStyleGrey,
+                              )
+                            ],
+                          ),
+                        );
+                      }),
                 ),
-              ),
-              35.verticalSpace,
-              _buildTile(iconData: Icons.playlist_add_check, title: "My List",onTap : model.navigateToMyList),
-              _buildTile(iconData: Icons.person_outline, title: "Account",onTap: model.navigateToMyAccount),
-              50.verticalSpace,
-              model.isBusy ? SizedBox(
-                  height: 50.h,
-                  child: const Center(child: CircularProgressIndicator(),)) :
-              InkWell(
-                  onTap: model.logout,
-                  child: Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),))
+                20.verticalSpace,
+                InkWell(
+                  onTap: model.navigateToManageProfile,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset("assets/images/svg/edit_icon.svg"),
+                      8.horizontalSpace,
+                      Text("Manage Profiles", style: heading3Style.copyWith(fontSize: 16.sp,color: Colors.white.withOpacity(0.8)),),
+                    ],
+                  ),
+                ),
+                35.verticalSpace,
+                _buildTile(iconData: Icons.playlist_add_check, title: "My List",onTap : model.navigateToMyList),
+                _buildTile(iconData: Icons.person_outline, title: "Account",onTap: model.navigateToMyAccount),
+                50.verticalSpace,
+                model.isBusy ? SizedBox(
+                    height: 50.h,
+                    child: const Center(child: CircularProgressIndicator(),)) :
+                InkWell(
+                    onTap: model.logout,
+                    child: Text("Sign Out", style: TextStyle(color: Colors.white.withOpacity(0.8), fontWeight: FontWeight.w600),))
 
 
-            ],
+              ],
+            ),
           ),
         ),
       ),

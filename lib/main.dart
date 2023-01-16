@@ -3,10 +3,6 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
-import 'package:netflix_clone/ui/views/dashboard/dashboard_view.dart';
-import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
-import 'package:netflix_clone/ui/views/my_account/my_account_view.dart';
-import 'package:netflix_clone/ui/views/startup/startup_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,12 +48,8 @@ class MyApp extends StatelessWidget {
               focusColor: kcPrimaryColor,
               textTheme: GoogleFonts.poppinsTextTheme().apply(bodyColor: Colors.white,displayColor: Colors.white),
             ),
-            // home: const OnBoardingView(),
-            // initialRoute: Routes.onBoardingView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,
-            // home: MyAccountView(),
-            // home: const StartupView(),
           );
         });
   }
