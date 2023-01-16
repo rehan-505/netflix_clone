@@ -15,6 +15,9 @@ class ComingSoonView extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<ComingSoonViewModel>.nonReactive(
       viewModelBuilder: () => ComingSoonViewModel(),
+      // onModelReady: (model){
+      //   model.sortMovies();
+      // },
       builder: (context, model, child) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         appBar: CustomAppBar(title: "New & Hot",profileImgPath: model.userService.currentProfile!.assetImg,),
@@ -78,18 +81,21 @@ class ComingSoonView extends StatelessWidget {
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       Text(
-                                        "Jan",
-                                        style: TextStyle(
+                                        model.getMovieReleaseMonth(movie),
+                                        style: normalStyleLowOpacity.copyWith(
                                             color: Colors.white.withOpacity(0.8),
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500),
+                                            fontSize: 16.sp,
+                                            fontWeight: FontWeight.w500,
+                                        ),
                                       ),
                                       5.verticalSpace,
-                                      const Text("20",
-                                          style: TextStyle(
+                                      Text(model.getMovieReleaseDayNo(movie),
+                                          style: normalStyleLowOpacity.copyWith(
                                               color: Colors.white,
                                               fontSize: 20,
-                                              fontWeight: FontWeight.w600))
+                                              fontWeight: FontWeight.w600
+                                          )
+                                      )
                                     ],
                                   ),
                                   10.horizontalSpace,
@@ -112,20 +118,12 @@ class ComingSoonView extends StatelessWidget {
                                             ),
 
                                           ),
-                                          // ClipRRect(
-                                          //   child: Image.network(
-                                          //     movie.imgUrl,
-                                          //     height: 200.h,
-                                          //     fit: BoxFit.cover,
-                                          //     width: double.infinity,
-                                          //   ),
-                                          // ),
                                           5.verticalSpace,
                                           Row(
                                             children: [
                                               Text(movie.title),
-                                              Spacer(),
-                                              Icon(
+                                              const Spacer(),
+                                              const Icon(
                                                 Icons.info_outline_rounded,
                                                 color: Colors.white,
                                               ),
@@ -134,12 +132,12 @@ class ComingSoonView extends StatelessWidget {
                                           ),
                                           10.verticalSpace,
                                           Text(
-                                            "Coming January 20",
+                                            "Coming ${model.getMovieReleaseDate(movie)}",
                                             style: TextStyle(fontSize: 16.sp),
                                           ),
                                           10.verticalSpace,
                                           Text(
-                                            "dummy " * 20,
+                                            (movie.des + " ") * 20,
                                             style: captionStyleGrey,
                                           ),
                                         ],

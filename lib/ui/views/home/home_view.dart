@@ -74,7 +74,6 @@ class HomeView extends StatelessWidget {
             children: [
               _buildMainPoster(context, model.posterMovie,model),
               _buildCategoryHorizontalList("Trending Now", context, model.getFilteredMovies.sublist(0,model.getFilteredMovies.length~/2),model: model ),
-              30.verticalSpace,
               StreamBuilder(
                   stream: model.userStream,
                   builder: (context,AsyncSnapshot<DocumentSnapshot<Map<String,dynamic>>> snapshot){
@@ -85,11 +84,8 @@ class HomeView extends StatelessWidget {
 
                 return _buildCategoryHorizontalList("My List", context, model.getUpdatedMyList(snapshot.data!),model: model );
               }),
-              30.verticalSpace,
               _buildCategoryHorizontalList("Award Winning", context,model.getFilteredMovies.sublist(model.getFilteredMovies.length~/2,model.getFilteredMovies.length),model: model),
-              30.verticalSpace,
               _buildCategoryHorizontalList("Top Movies", context,model.getFilteredMovies.where((element) => !(element.isSeason)).toList(),reverse: true,model: model),
-              30.verticalSpace,
               _buildCategoryHorizontalList("Top TV Shows", context,model.getFilteredMovies.where((element) => (element.isSeason)).toList(),reverse: true,model: model),
 
             ],
@@ -227,7 +223,7 @@ class HomeView extends StatelessWidget {
                     _buildSmallButton(Icons.info_outline, "Info",
                         padding: EdgeInsets.symmetric(vertical: 2.h),
                         onTap: (){
-                          model.detailsAndInfoTapped(movie, context);
+                          model.detailsAndInfoTapped(movie, context,fromPoster: true);
                         }
                     )
                   ],
@@ -241,51 +237,59 @@ class HomeView extends StatelessWidget {
   }
 
   Widget _buildCategoryHorizontalList(String categoryName, BuildContext context, List<Movie> movies, {bool reverse = false, required HomeViewModel model}) {
+
+    if(movies.isEmpty){
+      return const SizedBox();
+    }
+
     // print("into build category");
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 10.w),
-          child: Text(
-            categoryName,
-            style: heading3Style,
+    return Padding(
+      padding:  EdgeInsets.only(bottom: 30.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 10.w),
+            child: Text(
+              categoryName,
+              style: heading3Style,
+            ),
           ),
-        ),
-        10.verticalSpace,
-        SizedBox(
-          height: 150.h,
-          child: ListView.builder(
+          10.verticalSpace,
+          SizedBox(
+            height: 150.h,
+            child: ListView.builder(
 
-              scrollDirection: Axis.horizontal,
-              itemCount: movies.length,
-              itemBuilder: (context, index) {
+                scrollDirection: Axis.horizontal,
+                itemCount: movies.length,
+                itemBuilder: (context, index) {
 
-                Movie movie = movies[reverse ? (movies.length-1)-index : index];
+                  Movie movie = movies[reverse ? (movies.length-1)-index : index];
 
-                return InkWell(
-                  onTap: () async{
-                    await showBottomSheet(context,movie,model);
+                  return InkWell(
+                    onTap: () async{
+                      await showBottomSheet(context,movie,model);
 
-                    // await model.uploadMovies();
+                      // await model.uploadMovies();
 
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(8.r),
-                        child: Image.network(
-                          movie.imgUrl,
-                          height: 100.h,
-                          width: 100.h,
-                          fit: BoxFit.cover,
-                        )),
-                  ),
-                );
-              }),
-        ),
-      ],
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 10.w),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.r),
+                          child: Image.network(
+                            movie.imgUrl,
+                            height: 100.h,
+                            width: 100.h,
+                            fit: BoxFit.cover,
+                          )),
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 

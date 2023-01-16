@@ -2,26 +2,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
+import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/models/app_user.dart';
 import 'package:netflix_clone/models/profile.dart';
+import 'package:netflix_clone/services/firebase_service.dart';
 
 import '../models/movie.dart';
 
 class CurrentUserService {
   AppUser? _myUser;
   Profile? currentProfile;
+  final FirebaseService _firebaseService = locator<FirebaseService>();
 
   AppUser? get myUser => _myUser;
 
 
   Future<void> loadCurrentUser() async{
     try{
-      DocumentSnapshot<Map<String, dynamic>> documentSnapshot =
-          await FirebaseFirestore.instance
-              .collection("users")
-              .doc(FirebaseAuth.instance.currentUser!.uid)
-              .get();
-      _myUser = AppUser.fromJson(documentSnapshot.data()!);
+      _myUser = await _firebaseService.getCurrentUserFromDb();
     }
     catch(e){
       if (kDebugMode) {
@@ -32,55 +30,25 @@ class CurrentUserService {
 
 
   Future<bool> currentUserExistsInDB() async{
-    return (await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get()).exists;
+    return (await _firebaseService.currentUserExistsInDB()) ?? false;
   }
 
   Future<void> updateCurrentUser(AppUser user) async{
     _myUser = user;
-    await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).set(user.toJson());
+    await _firebaseService.updateUser(user);
   }
 
   Future<void> addProfile(Profile profile) async{
-    try{
-      myUser!.profiles.add(profile);
-      List temp = [profile.toJson()];
-
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({'profiles': FieldValue.arrayUnion(temp)});
-
-      if(myUser!.profiles.length==1){
-        currentProfile=myUser!.profiles[0];
-      }
-    }
-    catch(e){
-      if (kDebugMode) {
-        print(e);
-        rethrow;
-
-      }
+    myUser!.profiles.add(profile);
+    await _firebaseService.addProfile(profile);
+    if(myUser!.profiles.length==1){
+      currentProfile=myUser!.profiles[0];
     }
   }
 
   Future<void> deleteProfile(Profile profile) async{
-    try{
-      myUser!.profiles.removeWhere((element) => element.id==profile.id);
-
-      await FirebaseFirestore.instance
-          .collection("users")
-          .doc(FirebaseAuth.instance.currentUser!.uid)
-          .update({'profiles': myUser!.profiles.map((e) => e.toJson()).toList()});
-
-
-    }
-    catch(e){
-      if (kDebugMode) {
-        print(e);
-        rethrow;
-
-      }
-    }
+    myUser!.profiles.removeWhere((element) => element.id==profile.id);
+    await _firebaseService.updateProfilesInDB(_myUser!.profiles);
   }
 
 
@@ -127,9 +95,7 @@ class CurrentUserService {
 
 
   Future<void> updateProfilesInDB() async{
-    await FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).update({
-      "profiles" : myUser!.profiles.map((e) => e.toJson()).toList()
-    });
+    await _firebaseService.updateProfilesInDB(myUser!.profiles);
   }
 
   bool movieExistsInProfileList(String id){
@@ -179,10 +145,9 @@ class CurrentUserService {
 
   Future signOut() async{
     await FirebaseAuth.instance.signOut();
-    _clearUserData();
   }
 
-  void _clearUserData(){
+  void clearUserData()async{
     _myUser = null;
     currentProfile = null;
     return;

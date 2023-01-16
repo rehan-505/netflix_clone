@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/views/coming_soon/coming_soon_view.dart';
 import 'package:netflix_clone/ui/views/home/home_view.dart';
 import 'package:netflix_clone/ui/views/more/more_view.dart';

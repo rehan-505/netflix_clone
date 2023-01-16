@@ -1,13 +1,12 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/app/app.router.dart';
 import 'package:netflix_clone/enums/movie_category.dart';
 import 'package:netflix_clone/models/app_user.dart';
 import 'package:netflix_clone/services/download_service.dart';
+import 'package:netflix_clone/services/firebase_service.dart';
 import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -31,13 +30,15 @@ class HomeViewModel extends StreamViewModel {
   CurrentUserService get userService => _userService;
 
   final DownloadService _downloadService = locator<DownloadService>();
+  final FirebaseService _firebaseService = locator<FirebaseService>();
+
 
   ///for my list
-  Stream<DocumentSnapshot<Map<String,dynamic>>> get userStream => FirebaseFirestore.instance.collection('users').doc(userService.myUser!.id).snapshots();
+  Stream<DocumentSnapshot<Map<String,dynamic>>> get userStream => _firebaseService.getCurrentUserStream();
 
 
   @override
-  Stream<QuerySnapshot<Map<String,dynamic>>> get stream => FirebaseFirestore.instance.collection('movies').snapshots();
+  Stream<QuerySnapshot<Map<String,dynamic>>> get stream => _firebaseService.getMoviesStream();
 
   void fillList(List<QueryDocumentSnapshot<Map<String,dynamic>>> docs){
     _filteredMovies.clear();
@@ -56,21 +57,43 @@ class HomeViewModel extends StreamViewModel {
 
     _filteredMovies.removeWhere((element) => element.id=='poster');
 
-
   }
 
   List<Movie> get getFilteredMovies  => _filteredMovies;
   List<Movie> get getReleasedMovies  => _releasedMovies;
 
 
-  void detailsAndInfoTapped(Movie movie,BuildContext context){
-    _navigationService.back();
+  void detailsAndInfoTapped(Movie movie,BuildContext context,{bool fromPoster = false}){
+    if(!fromPoster){
+      _navigationService.back();
+    }
+
     Navigator.push(context, MaterialPageRoute(builder: (context){
       return MovieDetailsScreenView(movie: movie);
     }));
-    // _navigationService.navigateTo(Routes.movieDetailsScreenView,arguments: MovieDetailsScreenViewArguments(movie: movie) );
 
   }
+
+  bool uploaded = false;
+
+  // uploadMovies() async{
+  //   if(uploaded){
+  //     return;
+  //   }
+  //   uploaded = true;
+  //
+  //   for (int i=0; i<_releasedMovies.length; i++){
+  //     Movie movie = _releasedMovies[i];
+  //     if(movie.category == MovieCategory.action.name){
+  //       await FirebaseFirestore.instance.collection("movies")
+  //           .doc(movie.id)
+  //           .update({
+  //         "videoUrl": "https://firebasestorage.googleapis.com/v0/b/netflix-clone-3d1e2.appspot.com/o/VID_20230116_154853.mp4?alt=media&token=6c649092-9ce2-455f-a8db-11163f8c6eb5"
+  //       });
+  //     }
+  //   }
+  //
+  // }
 
   void navigateBack(){
     _navigationService.back();
