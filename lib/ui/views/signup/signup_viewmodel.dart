@@ -54,7 +54,7 @@ class SignupViewModel extends AuthenticationViewModel {
     if(await authService.signUpWithEmailAndPass(emailController.text, passController.text)){
 
       await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: emailController.text.trim(),));
-      navigationService.navigateTo(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
+      navigationService.navigateTo(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.dashboardView));
       return true;
 
     }

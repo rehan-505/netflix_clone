@@ -4,13 +4,13 @@ import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/ui/common/app_styles.dart';
 import 'package:netflix_clone/ui/shared_widgets/custom_app_bar.dart';
 import 'package:stacked/stacked.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import 'movie_details_screen_viewmodel.dart';
 
 class MovieDetailsScreenView extends StatelessWidget {
-  const MovieDetailsScreenView({Key? key, required this.movie}) : super(key: key);
+  const MovieDetailsScreenView({Key? key, required this.movie, this.showAppBarActions = true}) : super(key: key);
   final Movie movie;
+  final bool showAppBarActions;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,10 @@ class MovieDetailsScreenView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: CustomAppBar(title: "",onBackPressed: (){
           model.onBackPressed(context);
-        },showSearchIcon: true,profileImgPath: model.userService.currentProfile!.assetImg),
+          },
+            showSearchIcon: showAppBarActions ,
+            profileImgPath: showAppBarActions ? model.userService.currentProfile!.assetImg : null
+        ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: SingleChildScrollView(
           child: Column(
@@ -74,11 +77,12 @@ class MovieDetailsScreenView extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: (){}, child: Row(
+                        onPressed: model.playMovie, child: Row(
                         mainAxisSize: MainAxisSize.min,
-                        children: const [
-                          Icon(Icons.play_arrow,color: Colors.black,),
-                          Text("Play", style: TextStyle(color: Colors.black),)
+                        children:  [
+                          const Icon(Icons.play_arrow,color: Colors.black,),
+                          5.horizontalSpace,
+                          Text("Play", style: buttonHeadingStyle.copyWith(color: Colors.black,fontWeight: FontWeight.bold),)
 
                         ],
                       ),
@@ -95,11 +99,14 @@ class MovieDetailsScreenView extends StatelessWidget {
                     SizedBox(
                       width: double.infinity,
 
-                      child: ElevatedButton(onPressed: (){}, child: Row(
+                      child: ElevatedButton(
+                        onPressed: model.downloadMovie,
+                        child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.download),
-                          Text("Download", style: TextStyle(color: Colors.white.withOpacity(0.8)),)
+                          Icon( model.downloadPressed ? Icons.check : Icons.download),
+                          5.horizontalSpace,
+                          Text("Download", style: buttonHeadingStyle.copyWith(letterSpacing: 0),)
 
                         ],
                       ),

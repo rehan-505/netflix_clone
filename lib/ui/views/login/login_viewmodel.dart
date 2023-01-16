@@ -57,7 +57,7 @@ class LoginViewModel extends AuthenticationViewModel{
       ///if current user doesn't exist in db, create it
       if(!(await _userService.currentUserExistsInDB())){
         await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: FirebaseAuth.instance.currentUser!.email!));
-        navigationService.replaceWith(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.homeView));
+        navigationService.replaceWith(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.dashboardView));
 
       }
       else{

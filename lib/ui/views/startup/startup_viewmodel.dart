@@ -12,7 +12,7 @@ class StartupViewModel extends BaseViewModel {
   final CurrentUserService _userService = locator<CurrentUserService>();
 
   Future runStartupLogic() async {
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     if(FirebaseAuth.instance.currentUser==null) {
       _navigationService.replaceWith(Routes.onBoardingView);
       return;

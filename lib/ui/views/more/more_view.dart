@@ -84,15 +84,6 @@ class MoreView extends StatelessWidget {
                                       border: Border.all(color: Colors.white,width: selectedProfile ? 3.r : 0),
                                       borderRadius: BorderRadius.circular(4.r),
                                     ),
-                                    // child: ClipRRect(
-                                    //   borderRadius: BorderRadius.circular(4.r),
-                                    //   child: Image.asset(
-                                    //       profile!.assetImg,
-                                    //       height: 60.h,
-                                    //       width: 60.h,
-                                    //     fit: BoxFit.cover,
-                                    //     ),
-                                    // ),
                                   ),
                                 ),
                             (selectedProfile ? 5 : 10).verticalSpace,
@@ -119,8 +110,8 @@ class MoreView extends StatelessWidget {
                 ),
               ),
               35.verticalSpace,
-              _buildTile(iconData: Icons.playlist_add_check, title: "My List"),
-              _buildTile(iconData: Icons.person_outline, title: "Account"),
+              _buildTile(iconData: Icons.playlist_add_check, title: "My List",onTap : model.navigateToMyList),
+              _buildTile(iconData: Icons.person_outline, title: "Account",onTap: model.navigateToMyAccount),
               50.verticalSpace,
               model.isBusy ? SizedBox(
                   height: 50.h,
@@ -137,26 +128,29 @@ class MoreView extends StatelessWidget {
     );
   }
 
-  Widget _buildTile({required IconData iconData, required String title} ){
-    return Container(
-      margin: EdgeInsets.only(bottom: 7.h),
-      padding: EdgeInsets.symmetric(vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(10.r),
-      ),
-      child: Row(
-        children: [
-          10.horizontalSpace,
-          Icon(iconData, color: Colors.white,size: 30.r),
-          12.horizontalSpace,
-          Text(title, style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18.sp),),
-          const Spacer(),
-          Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey, size: 20.r,),
-          12.horizontalSpace,
+  Widget _buildTile({required IconData iconData, required String title,void Function()? onTap} ){
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 7.h),
+        padding: EdgeInsets.symmetric(vertical: 15.h),
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(10.r),
+        ),
+        child: Row(
+          children: [
+            10.horizontalSpace,
+            Icon(iconData, color: Colors.white,size: 30.r),
+            12.horizontalSpace,
+            Text(title, style: TextStyle(fontWeight: FontWeight.w600,fontSize: 18.sp),),
+            const Spacer(),
+            Icon(Icons.arrow_forward_ios_rounded,color: Colors.grey, size: 20.r,),
+            12.horizontalSpace,
 
 
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -5,12 +5,14 @@ import 'package:stacked/stacked.dart';
 import 'video_player_screen_viewmodel.dart';
 
 class VideoPlayerScreenView extends StatelessWidget {
-  const VideoPlayerScreenView({Key? key}) : super(key: key);
+  const VideoPlayerScreenView({Key? key, required this.movieLink}) : super(key: key);
+  final String movieLink;
+
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<VideoPlayerScreenViewModel>.reactive(
-      viewModelBuilder: () => VideoPlayerScreenViewModel(),
+      viewModelBuilder: () => VideoPlayerScreenViewModel(movieLink),
       onModelReady: (model) async{
         await model.initState();
       },

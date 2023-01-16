@@ -5,7 +5,6 @@ import 'package:stacked/stacked.dart';
 import '../../common/app_colors.dart';
 import '../../common/app_styles.dart';
 import '../../common/decorations.dart';
-import '../../shared_widgets/custom_app_bar.dart';
 import '../../shared_widgets/custom_button.dart';
 import 'add_profile_viewmodel.dart';
 

@@ -21,6 +21,13 @@ import '../services/current_user_service.dart';
 import 'package:netflix_clone/ui/views/add_profile/add_profile_view.dart';
 
 import 'package:netflix_clone/ui/views/forgot_pass/forgot_pass_view.dart';
+
+import '../services/download_service.dart';
+import 'package:netflix_clone/ui/views/mylist/mylist_view.dart';
+import 'package:netflix_clone/ui/views/specific_category/specific_category_view.dart';
+
+import '../services/firebase_service.dart';
+import 'package:netflix_clone/ui/views/my_account/my_account_view.dart';
 // @stacked-import
 
 @StackedApp(routes: [
@@ -39,15 +46,18 @@ MaterialRoute(page: MovieDetailsScreenView),
 MaterialRoute(page: MoreView),
 MaterialRoute(page: AddProfileView),
 MaterialRoute(page: ForgotPassView),
+MaterialRoute(page: MylistView),
+MaterialRoute(page: SpecificCategoryView),
+MaterialRoute(page: MyAccountView),
 // @stacked-route
 ], dependencies: [
   LazySingleton(classType: NavigationService),
   LazySingleton(classType: AuthService),
   LazySingleton(classType: CurrentUserService),
-  // LazySingleton(classType: DashboardViewModel),
-  LazySingleton(classType: BottomNavbarService)
+  LazySingleton(classType: DownloadService),
+  LazySingleton(classType: BottomNavbarService),
+  LazySingleton(classType: FirebaseService)
 
-  // LazySingleton(classType: DialogService),
   // @stacked-service
 ])
 class App {}

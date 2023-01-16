@@ -7,13 +7,15 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerScreenViewModel extends BaseViewModel {
 
-  final videoPlayerController = VideoPlayerController.network(
-      'https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4');
+  late final VideoPlayerController videoPlayerController;
 
+  VideoPlayerScreenViewModel(this.movieLink);
+  final String movieLink;
 
   ChewieController? chewieController;
 
   Future initState() async{
+    videoPlayerController = VideoPlayerController.network(movieLink);
     await runBusyFuture(initializeSettings());
   }
 

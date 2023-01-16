@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:netflix_clone/app/app.locator.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/views/dashboard/dashboard_view.dart';
 import 'package:netflix_clone/ui/views/movie_details_screen/movie_details_screen_view.dart';
+import 'package:netflix_clone/ui/views/my_account/my_account_view.dart';
 import 'package:netflix_clone/ui/views/startup/startup_view.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +19,7 @@ void main() async{
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await FlutterDownloader.initialize(debug: true, ignoreSsl: true);
 
 
   runApp(const MyApp());
@@ -41,7 +44,7 @@ class MyApp extends StatelessWidget {
             title: 'Flutter Demo',
             theme: ThemeData(
               bottomSheetTheme: BottomSheetThemeData(
-                  backgroundColor: Colors.grey[900]
+                  backgroundColor: Colors.grey[900],
               ),
               primarySwatch: Colors.red,
               primaryColor: kcPrimaryColor,
@@ -53,6 +56,7 @@ class MyApp extends StatelessWidget {
             // initialRoute: Routes.onBoardingView,
             onGenerateRoute: StackedRouter().onGenerateRoute,
             navigatorKey: StackedService.navigatorKey,
+            // home: MyAccountView(),
             // home: const StartupView(),
           );
         });

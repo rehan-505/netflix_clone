@@ -9,13 +9,14 @@ import '../../services/bottom_navbar_service.dart';
 import '../common/app_styles.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  CustomAppBar({Key? key, this.onBackPressed, required this.title, this.profileImgPath, this.showSearchIcon = false,  this.showLogo=false}) : super(key: key);
+  CustomAppBar({Key? key, this.onBackPressed, required this.title, this.profileImgPath, this.showSearchIcon = false,  this.showLogo=false, this.automaticallyImplyLeading = false}) : super(key: key);
 
   final void Function()? onBackPressed;
   final String title;
   final String? profileImgPath;
   final bool showSearchIcon;
   final bool showLogo;
+  final bool automaticallyImplyLeading;
 
   final BottomNavbarService _bottomBarService = locator<BottomNavbarService>();
 
@@ -23,10 +24,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+
       elevation: 0,
       backgroundColor: showLogo ? Colors.transparent: kcBackgroundColor,
       title: Text(title,style: heading3Style,),
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       actions: [
 
         showSearchIcon ? GestureDetector(
