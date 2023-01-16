@@ -30,6 +30,7 @@ class SearchView extends StatelessWidget {
           children: [
             5.verticalSpace,
             TextFormField(
+
               controller: model.textEditingController,
               onChanged: model.onChanged,
               focusNode: model.focusNode,
@@ -58,7 +59,7 @@ class SearchView extends StatelessWidget {
                 builder: (context,AsyncSnapshot<QuerySnapshot<Map<String,dynamic>>> snapshot){
 
               if(snapshot.connectionState==ConnectionState.waiting || !(snapshot.hasData)){
-                print("has data: ${snapshot.hasData}");
+                // print("has data: ${snapshot.hasData}");
                 return const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(
