@@ -30,7 +30,7 @@ class HomeView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomAppBar(title: "",profileImgPath: model.userService.currentProfile!.assetImg,showSearchIcon: true,showLogo: true),
+              CustomAppBar(title: "",profileImgPath: model.getProfileImg(),showSearchIcon: true,showLogo: true),
               Row(
                 children: [
                   const Spacer(),
@@ -79,7 +79,7 @@ class HomeView extends StatelessWidget {
                   builder: (context,AsyncSnapshot<DocumentSnapshot<Map<String,dynamic>>> snapshot){
                     if(!(snapshot.hasData) || snapshot.connectionState==ConnectionState.waiting){
                       // model.userService.getMyListMoviesFromProfile(profile, model);
-                      return _buildCategoryHorizontalList("My List", context, model.userService.getMyListMovies(model.getFilteredMovies),model: model );
+                      return _buildCategoryHorizontalList("My List", context, model.getMyListMovies(),model: model );
                     }
 
                 return _buildCategoryHorizontalList("My List", context, model.getUpdatedMyList(snapshot.data!),model: model );
@@ -332,7 +332,7 @@ class HomeView extends StatelessWidget {
               movie,screenContext,
               onPlayPressed: (){model.playVideo(movie,popSheet: true,context: context);},
               downloadPressed: model.downloadPressed,
-              movieAddedToList: model.userService.movieExistsInProfileList(movie.id),
+              movieAddedToList: model.movieExistsInProfileList(movie),
               onAddToListPressed: (){
                 model.handleAddToListClicked(movie);
               },
@@ -370,7 +370,7 @@ class PosterMovieAddIcon extends ViewModelWidget<HomeViewModel> {
 
           },
           child:             Icon(
-            viewModel.userService.movieExistsInProfileList(viewModel.posterMovie.id) ?
+            viewModel.movieExistsInProfileList(viewModel.posterMovie) ?
             Icons.check : Icons.add,
             color: Colors.white,
             size: 28.h,

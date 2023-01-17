@@ -15,7 +15,7 @@ class SearchViewModel extends StreamViewModel {
   String searchText = '';
 
 
-  final CurrentUserService userService = locator<CurrentUserService>();
+  final CurrentUserService _userService = locator<CurrentUserService>();
 
   final List<Movie> _movies = [];
   List<Movie> _searchResultMovies = [];
@@ -60,5 +60,10 @@ class SearchViewModel extends StreamViewModel {
       }
     }
   }
+
+  String getProfileImg() {
+    return _userService.currentProfile!.assetImg;
+  }
+
 
 }

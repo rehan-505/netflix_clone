@@ -9,9 +9,6 @@ class ForgotPassViewModel extends AuthenticationViewModel {
 
   final FocusNode emailFocusNode = FocusNode();
 
-  // final CurrentUserService _userService = locator<CurrentUserService>();
-
-
   @override
   Future<bool> runAuthentication() async{
 

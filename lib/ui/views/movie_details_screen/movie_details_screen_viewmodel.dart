@@ -21,7 +21,6 @@ class MovieDetailsScreenViewModel extends BaseViewModel {
 
   final CurrentUserService _userService = locator<CurrentUserService>();
 
-  CurrentUserService get userService => _userService;
 
 
   void onBackPressed(BuildContext context){
@@ -41,5 +40,10 @@ class MovieDetailsScreenViewModel extends BaseViewModel {
   void playMovie(){
     _navigationService.navigateToVideoPlayerScreenView(movieLink: movie.videoUrl);
   }
+
+  String getProfileImg() {
+    return _userService.currentProfile!.assetImg;
+  }
+
 
 }

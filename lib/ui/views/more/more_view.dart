@@ -30,21 +30,21 @@ class MoreView extends StatelessWidget {
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                      itemCount: (!(model.userService.myUser!.profiles.length > 4))
-                          ? model.userService.myUser!.profiles.length + 1
-                          : model.userService.myUser!.profiles.length,
+                      itemCount: (!(model.getProfilesLength() > 4))
+                          ? model.getProfilesLength() + 1
+                          : model.getProfilesLength(),
                       itemBuilder: (context, index) {
 
                         Profile? profile;
 
                         bool isLastIndex =
-                        (index == model.userService.myUser!.profiles.length);
+                        (index == model.getProfilesLength());
 
                         if (!isLastIndex) {
-                          profile = model.userService.myUser!.profiles[index];
+                          profile = model.getProfile(index);
                         }
 
-                        bool selectedProfile = model.userService.currentProfile!.id==profile?.id;
+                        bool selectedProfile = model.selectedProfile(profile);
 
 
                         return Padding(

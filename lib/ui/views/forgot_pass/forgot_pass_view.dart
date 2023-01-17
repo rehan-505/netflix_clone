@@ -22,7 +22,6 @@ class ForgotPassView extends StatelessWidget {
             bool result = await model.saveData();
             if(result){
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Reset Email Sent")));
-              print("Reset Email Sent");
             }
           },
           onBackPressed: model.navigateBack,

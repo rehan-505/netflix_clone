@@ -2,7 +2,6 @@ import 'package:netflix_clone/services/firebase_service.dart';
 import 'package:stacked/stacked.dart';
 import 'package:intl/intl.dart';
 import '../../../app/app.locator.dart';
-import '../../../services/current_user_service.dart';
 
 class MyAccountViewModel extends BaseViewModel {
   final FirebaseService _firebaseService = locator<FirebaseService>();

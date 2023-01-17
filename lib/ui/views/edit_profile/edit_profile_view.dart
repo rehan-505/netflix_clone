@@ -7,7 +7,6 @@ import 'package:netflix_clone/ui/shared_widgets/custom_button.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../common/app_styles.dart';
-import '../../shared_widgets/custom_app_bar.dart';
 import 'edit_profile_viewmodel.dart';
 
 class EditProfileView extends StatelessWidget {

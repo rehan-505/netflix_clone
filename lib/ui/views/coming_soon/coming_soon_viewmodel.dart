@@ -16,7 +16,7 @@ class ComingSoonViewModel extends StreamViewModel {
   final List<Movie> _movies = [];
 
   @override
-  Stream<QuerySnapshot<Map<String,dynamic>>> get stream => FirebaseFirestore.instance.collection('movies').snapshots();
+  Stream<QuerySnapshot<Map<String,dynamic>>> get stream => _firebaseService.getMoviesStream();
 
   void fillList(List<QueryDocumentSnapshot<Map<String,dynamic>>> docs){
     _movies.clear();

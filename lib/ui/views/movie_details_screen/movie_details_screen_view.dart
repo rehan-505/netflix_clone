@@ -21,7 +21,7 @@ class MovieDetailsScreenView extends StatelessWidget {
           model.onBackPressed(context);
           },
             showSearchIcon: showAppBarActions ,
-            profileImgPath: showAppBarActions ? model.userService.currentProfile!.assetImg : null
+            profileImgPath: showAppBarActions ? model.getProfileImg() : null
         ),
         backgroundColor: Theme.of(context).backgroundColor,
         body: SingleChildScrollView(

@@ -12,8 +12,6 @@ class AddProfileViewModel extends BaseViewModel {
   final CurrentUserService _userService = locator<CurrentUserService>();
   final String? nextRoute;
 
-  CurrentUserService get userService => _userService;
-
   AddProfileViewModel({this.nextRoute});
 
   late String imgPath;
@@ -35,11 +33,6 @@ class AddProfileViewModel extends BaseViewModel {
     if(controller.text.trim().isEmpty || errorText!=null){
       return;
     }
-
-    // await runBusyFuture(Future.delayed(const Duration(seconds: 3)));
-
-
-
 
     await runBusyFuture(_userService.addProfile(Profile(id: "profile_${_userService.getAvailableProfileSlot()}", assetImg: _userService.getNewProfileImgPath(), name: controller.text, moviesList: [])));
 

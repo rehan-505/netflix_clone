@@ -13,11 +13,11 @@ class MoreViewModel extends BaseViewModel {
   final CurrentUserService _userService = locator<CurrentUserService>();
   final BottomNavbarService _navbarService = locator<BottomNavbarService>();
 
-  CurrentUserService get userService => _userService;
+  // CurrentUserService get userService => _userService;
 
 
   void logout() async{
-    await runBusyFuture(userService.signOut());
+    await runBusyFuture(_userService.signOut());
     _navigationService.clearStackAndShow(Routes.onBoardingView);
   }
 
@@ -39,6 +39,18 @@ class MoreViewModel extends BaseViewModel {
   void navigateToAddProfile() async{
     await _navigationService.navigateToAddProfileView();
     notifyListeners();
+  }
+
+  int getProfilesLength() {
+    return _userService.myUser!.profiles.length;
+  }
+
+  Profile getProfile(int index) {
+    return _userService.myUser!.profiles[index];
+  }
+
+  bool selectedProfile(Profile? profile){
+    return _userService.currentProfile!.id==profile?.id;
   }
 
 

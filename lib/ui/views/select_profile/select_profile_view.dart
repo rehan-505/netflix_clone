@@ -79,16 +79,15 @@ class SelectProfileView extends StatelessWidget {
   }
 
   Widget _buildProfileIconsGrid(SelectProfileViewModel model) {
-    bool profilesLimitComplete = model.userService.myUser!.profiles.length > 4;
-    // print("profiles limit completed: ${profilesLimitComplete}");
+    bool profilesLimitComplete = model.profilesLimitCompleted();
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 42.w),
       child: GridView.builder(
           padding: EdgeInsets.zero,
           itemCount: (!profilesLimitComplete)
-              ? model.userService.myUser!.profiles.length + 1
-              : model.userService.myUser!.profiles.length,
+              ? model.profilesLength() + 1
+              : model.profilesLength(),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisSpacing: 0.w,
               crossAxisCount: 2,
@@ -98,10 +97,10 @@ class SelectProfileView extends StatelessWidget {
             Profile? profile;
 
             bool isLastIndex =
-                (index == model.userService.myUser!.profiles.length);
+                (index == model.profilesLength());
 
             if (!isLastIndex) {
-              profile = model.userService.myUser!.profiles[index];
+              profile = model.getProfile(index);
             }
 
             return Column(

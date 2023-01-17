@@ -40,14 +40,13 @@ class SignupViewModel extends AuthenticationViewModel {
 
     if(emailController.text.trim().isEmpty ) {
       emailErrorText = "Email is required";
-      notifyListeners();
     }
     if (passController.text.trim().isEmpty ){
       passErrorText = "Password is required";
-      notifyListeners();
     }
 
     if(emailController.text.trim().isEmpty|| passController.text.trim().isEmpty || passErrorText !=null || emailErrorText!=null){
+      notifyListeners();
       return false;
     }
 
@@ -79,9 +78,6 @@ class SignupViewModel extends AuthenticationViewModel {
     notifyListeners();
   }
 
-  void navigateToPhoneScreen(){
-    // navigationService.navigateTo(Routes.phoneAuthView);
-  }
 
   void onEmailFieldTapped(){
     if(!emailFocusNode.hasFocus){

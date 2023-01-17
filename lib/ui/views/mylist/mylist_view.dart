@@ -19,7 +19,7 @@ class MylistView extends StatelessWidget {
         backgroundColor: Theme.of(context).backgroundColor,
         body: GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 10.h),
-            itemCount: model.userService.currentProfile!.moviesList.length,
+            itemCount: model.getCurrentMoviesLength(),
             gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 childAspectRatio: 0.7.r,
@@ -28,10 +28,8 @@ class MylistView extends StatelessWidget {
             ),
             itemBuilder: (context,index){
 
-              String id = model.userService.currentProfile!.moviesList[index];
-
               return FutureBuilder(
-                future: FirebaseFirestore.instance.collection('movies').doc(id).get(),
+                future: model.getMovie(index),
                 builder: (context,AsyncSnapshot<DocumentSnapshot<Map<String,dynamic>>> snapshot) {
 
                   if(!(snapshot.hasData) || snapshot.connectionState==ConnectionState.waiting){

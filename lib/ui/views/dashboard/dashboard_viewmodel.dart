@@ -1,3 +1,4 @@
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../app/app.locator.dart';
@@ -7,9 +8,12 @@ class DashboardViewModel extends BaseViewModel {
 
   final BottomNavbarService _bottomBarService = locator<BottomNavbarService>();
 
-  BottomNavbarService get bottomBarService => _bottomBarService;
   void onItemSelected(int i){
     notifyListeners();
+  }
+
+  PersistentTabController getController(){
+  return _bottomBarService.controller;
   }
 
 }

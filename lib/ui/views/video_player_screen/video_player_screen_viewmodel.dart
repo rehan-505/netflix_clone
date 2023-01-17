@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:stacked/stacked.dart';
 
@@ -47,12 +46,8 @@ class VideoPlayerScreenViewModel extends BaseViewModel {
     chewieController?.dispose();
     videoPlayerController.dispose();
 
-    // TODO: implement dispose
     super.dispose();
   }
-
-
-
 
 
 }

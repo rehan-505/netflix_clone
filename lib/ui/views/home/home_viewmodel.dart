@@ -27,7 +27,7 @@ class HomeViewModel extends StreamViewModel {
 
   final CurrentUserService _userService = locator<CurrentUserService>();
 
-  CurrentUserService get userService => _userService;
+  // CurrentUserService get userService => _userService;
 
   final DownloadService _downloadService = locator<DownloadService>();
   final FirebaseService _firebaseService = locator<FirebaseService>();
@@ -39,6 +39,8 @@ class HomeViewModel extends StreamViewModel {
 
   @override
   Stream<QuerySnapshot<Map<String,dynamic>>> get stream => _firebaseService.getMoviesStream();
+
+  bool movieExistsInProfileList(Movie movie) => _userService.movieExistsInProfileList(movie.id);
 
   void fillList(List<QueryDocumentSnapshot<Map<String,dynamic>>> docs){
     _filteredMovies.clear();
@@ -76,25 +78,6 @@ class HomeViewModel extends StreamViewModel {
 
   bool uploaded = false;
 
-  // uploadMovies() async{
-  //   if(uploaded){
-  //     return;
-  //   }
-  //   uploaded = true;
-  //
-  //   for (int i=0; i<_releasedMovies.length; i++){
-  //     Movie movie = _releasedMovies[i];
-  //     if(movie.category == MovieCategory.action.name){
-  //       await FirebaseFirestore.instance.collection("movies")
-  //           .doc(movie.id)
-  //           .update({
-  //         "videoUrl": "https://firebasestorage.googleapis.com/v0/b/netflix-clone-3d1e2.appspot.com/o/VID_20230116_154853.mp4?alt=media&token=6c649092-9ce2-455f-a8db-11163f8c6eb5"
-  //       });
-  //     }
-  //   }
-  //
-  // }
-
   void navigateBack(){
     _navigationService.back();
   }
@@ -117,7 +100,7 @@ class HomeViewModel extends StreamViewModel {
   }
 
   void handleAddToListClicked(Movie movie){
-    if(userService.movieExistsInProfileList(movie.id)){
+    if(_userService.movieExistsInProfileList(movie.id)){
       _removeMovieFromProfile(movie.id);
     }
     else{
@@ -158,6 +141,14 @@ class HomeViewModel extends StreamViewModel {
 
     _downloadService.dispose();
     super.dispose();
+  }
+
+  String getProfileImg() {
+    return _userService.currentProfile!.assetImg;
+  }
+
+  List<Movie> getMyListMovies() {
+    return _userService.getMyListMovies(_filteredMovies);
   }
 
 }

@@ -38,6 +38,10 @@ class FirebaseService {
     return _firebaseRef.collection(MyCollections.movies).snapshots();
   }
 
+  Future<DocumentSnapshot<Map<String,dynamic>>> getMovie(String id) async{
+   return await FirebaseFirestore.instance.collection('movies').doc(id).get();
+  }
+
   Stream<DocumentSnapshot<Map<String,dynamic>>> getCurrentUserStream(){
     return _firebaseRef.collection(MyCollections.users).doc(getCurrentUser()!.uid).snapshots();
   }

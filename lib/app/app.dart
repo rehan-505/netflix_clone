@@ -1,5 +1,4 @@
 import 'package:netflix_clone/services/auth_service.dart';
-import 'package:netflix_clone/ui/views/dashboard/dashboard_viewmodel.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:netflix_clone/ui/views/startup/startup_view.dart';
 import 'package:stacked_services/stacked_services.dart';

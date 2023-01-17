@@ -8,8 +8,8 @@ import '../../../services/current_user_service.dart';
 
 class SelectProfileViewModel extends BaseViewModel {
 
-  final navigationService = locator<NavigationService>();
-  final CurrentUserService userService = locator<CurrentUserService>();
+  final _navigationService = locator<NavigationService>();
+  final CurrentUserService _userService = locator<CurrentUserService>();
 
   SelectProfileViewModel({this.onyEditClickedView = false}){
     editClicked = onyEditClickedView;
@@ -23,7 +23,7 @@ class SelectProfileViewModel extends BaseViewModel {
 
   void onBackPressed(){
     if(onyEditClickedView){
-      navigationService.back();
+      _navigationService.back();
       return;
     }
 
@@ -34,7 +34,7 @@ class SelectProfileViewModel extends BaseViewModel {
       notifyListeners();
     }
     else {
-      navigationService.back();
+      _navigationService.back();
     }
   }
 
@@ -63,7 +63,7 @@ class SelectProfileViewModel extends BaseViewModel {
   void onProfileClicked(Profile profile) async{
 
     if(onyEditClickedView){
-      await navigationService.navigateToEditProfileView(profile: profile,);
+      await _navigationService.navigateToEditProfileView(profile: profile,);
       notifyListeners();
       return;
     }
@@ -74,24 +74,38 @@ class SelectProfileViewModel extends BaseViewModel {
     if(editClicked){
 
       editClicked=false;
-      await navigationService.navigateToEditProfileView(profile: profile,);
+      await _navigationService.navigateToEditProfileView(profile: profile,);
       notifyListeners();
     }
 
     else{
-      userService.currentProfile = profile;
-      navigationService.replaceWith(Routes.dashboardView);
+      _userService.currentProfile = profile;
+      _navigationService.replaceWith(Routes.dashboardView);
     }
 
   }
 
   onAddProfileTapped() async{
-    bool? added = await navigationService.navigateToAddProfileView(backIcon: true);
+    bool? added = await _navigationService.navigateToAddProfileView(backIcon: true);
     if(added ?? false){
       notifyListeners();
     }
 
   }
+
+  bool profilesLimitCompleted() {
+    return _userService.myUser!.profiles.length > 4;
+  }
+
+  int profilesLength() {
+    return _userService.myUser!.profiles.length;
+  }
+
+  Profile getProfile(int index) {
+    return _userService.myUser!.profiles[index];
+  }
+
+
 
 
 

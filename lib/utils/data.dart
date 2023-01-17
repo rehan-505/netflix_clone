@@ -33,3 +33,22 @@ final List<Movie> _movies = [
   Movie(id: const Uuid().v4(), title: "Witcher", des: "dummy", length: 90, ageRating: 13, category: MovieCategory.action.name, isSeason: true, releaseDate: DateTime(2023,5,23), videoUrl: "https://flutter.github.io/assets-for-api-docs/assets/videos/butterfly.mp4", imgUrl: "https://firebasestorage.googleapis.com/v0/b/netflix-clone-3d1e2.appspot.com/o/witcher.jpg?alt=media&token=3b0a670d-59e7-4e13-ae71-b9d71ab55418"),
 
 ];
+
+// uploadMovies() async{
+//   if(uploaded){
+//     return;
+//   }
+//   uploaded = true;
+//
+//   for (int i=0; i<_releasedMovies.length; i++){
+//     Movie movie = _releasedMovies[i];
+//     if(movie.category == MovieCategory.action.name){
+//       await FirebaseFirestore.instance.collection("movies")
+//           .doc(movie.id)
+//           .update({
+//         "videoUrl": "https://firebasestorage.googleapis.com/v0/b/netflix-clone-3d1e2.appspot.com/o/VID_20230116_154853.mp4?alt=media&token=6c649092-9ce2-455f-a8db-11163f8c6eb5"
+//       });
+//     }
+//   }
+//
+// }

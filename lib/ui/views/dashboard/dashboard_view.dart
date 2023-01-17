@@ -19,7 +19,7 @@ class DashboardView extends StatelessWidget {
       viewModelBuilder: () => DashboardViewModel(),
       builder: (context, model, child) => PersistentTabView(
         context,
-        controller: model.bottomBarService.controller,
+        controller: model.getController(),
         onItemSelected: model.onItemSelected,
 
         screens: const [
@@ -55,10 +55,10 @@ class DashboardView extends StatelessWidget {
 
   PersistentBottomNavBarItem _buildNavBarItem({required IconData iconData1, required IconData iconData2, required String title, required int index, required DashboardViewModel model }){
     return PersistentBottomNavBarItem(
-      icon: Icon(index == model.bottomBarService.controller.index ? iconData1 : iconData2),
+      icon: Icon(index == model.getController().index ? iconData1 : iconData2),
       title: title, activeColorPrimary: Colors.white,
       inactiveColorPrimary: Colors.grey,
-      textStyle: captionStyle10
+      textStyle: captionStyle10,
 
     );
   }

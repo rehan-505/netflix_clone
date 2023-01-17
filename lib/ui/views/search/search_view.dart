@@ -1,9 +1,7 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:netflix_clone/models/movie.dart';
 import 'package:netflix_clone/ui/common/app_colors.dart';
 import 'package:netflix_clone/ui/views/search/search_results_component.dart';
 import 'package:stacked/stacked.dart';
@@ -23,7 +21,7 @@ class SearchView extends StatelessWidget {
         model.focusNode.requestFocus();
       },
       builder: (context, model, child) => Scaffold(
-        appBar: CustomAppBar(title: "Search",profileImgPath: model.userService.currentProfile!.assetImg,),
+        appBar: CustomAppBar(title: "Search",profileImgPath: model.getProfileImg(),),
         backgroundColor: kcBackgroundColor,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

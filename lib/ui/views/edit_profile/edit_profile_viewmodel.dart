@@ -13,7 +13,7 @@ class EditProfileViewModel extends BaseViewModel {
 
 
   final Profile profile;
-  final CurrentUserService userService = locator<CurrentUserService>();
+  final CurrentUserService _userService = locator<CurrentUserService>();
 
 
 
@@ -26,7 +26,7 @@ class EditProfileViewModel extends BaseViewModel {
     loading = true;
     notifyListeners();
 
-    await userService.deleteProfile(profile);
+    await _userService.deleteProfile(profile);
 
     loading = false;
     notifyListeners();
@@ -45,7 +45,7 @@ class EditProfileViewModel extends BaseViewModel {
       return false;
     }
 
-    await runBusyFuture(userService.renameProfile(profile.copyWith(name: controller.text)),throwException: true);
+    await runBusyFuture(_userService.renameProfile(profile.copyWith(name: controller.text)),throwException: true);
 
     navigationService.back(result: true);
   }
