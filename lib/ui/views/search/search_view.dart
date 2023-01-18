@@ -21,6 +21,7 @@ class SearchView extends StatelessWidget {
         model.focusNode.requestFocus();
       },
       builder: (context, model, child) => Scaffold(
+
         appBar: CustomAppBar(title: "Search",profileImgPath: model.getProfileImg(),),
         backgroundColor: kcBackgroundColor,
         body: Column(

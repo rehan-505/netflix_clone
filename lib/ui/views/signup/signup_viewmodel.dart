@@ -53,13 +53,14 @@ class SignupViewModel extends AuthenticationViewModel {
     if(await authService.signUpWithEmailAndPass(emailController.text, passController.text)){
 
       await _userService.updateCurrentUser(AppUser(id: FirebaseAuth.instance.currentUser!.uid, profiles: [], email: emailController.text.trim(),));
-      navigationService.navigateTo(Routes.addProfileView,arguments: const AddProfileViewArguments(nextRoute: Routes.dashboardView));
+      navigateToAddProfile();
       return true;
 
     }
 
     return false;
   }
+
 
   void navigateToLogin() =>
       navigationService.replaceWith(Routes.loginView);
@@ -76,6 +77,10 @@ class SignupViewModel extends AuthenticationViewModel {
   void validatePass(String? x){
     passErrorText = passwordValidation(x);
     notifyListeners();
+  }
+
+  void navigateToAddProfile(){
+    navigationService.navigateToAddProfileView(nextRoute: Routes.dashboardView);
   }
 
 

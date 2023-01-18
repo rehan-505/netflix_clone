@@ -18,7 +18,7 @@ class MoreViewModel extends BaseViewModel {
 
   void logout() async{
     await runBusyFuture(_userService.signOut());
-    _navigationService.clearStackAndShow(Routes.onBoardingView);
+    _navigationService.clearStackAndShow(Routes.loginView);
   }
 
   void navigateToManageProfile() async{

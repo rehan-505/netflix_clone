@@ -20,17 +20,16 @@ class EditProfileViewModel extends BaseViewModel {
   final NavigationService navigationService = locator<NavigationService>();
   String? errorText;
   final TextEditingController controller = TextEditingController();
-  bool loading = false;
 
   Future<void> deleteProfile() async{
-    loading = true;
-    notifyListeners();
+    if(!isCurrentProfile()){
+      await runBusyFuture((_userService.deleteProfile(profile)));
+      navigationService.back(result: true);
+    }
+  }
 
-    await _userService.deleteProfile(profile);
-
-    loading = false;
-    notifyListeners();
-
+  bool isCurrentProfile(){
+    return _userService.currentProfile?.id == profile.id;
   }
 
 

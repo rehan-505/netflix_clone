@@ -29,11 +29,12 @@ class EditProfileView extends StatelessWidget {
         backgroundColor: kcBackgroundColor,
         appBar: AppBar(
           actions: [
-            // InkWell(
-            //     onTap: (){
-            //       model.deleteProfile();
-            //     },
-            //     child: const Icon(Icons.delete_forever, color: Colors.red,)),
+            if(!(model.isBusy))
+            GestureDetector(
+                onTap: (){
+                  model.deleteProfile();
+                },
+                child: Icon(Icons.delete_forever, color: model.isCurrentProfile() ? Colors.grey.withOpacity(0.7) : Colors.red,)),
             30.horizontalSpace,
           ],
           title: Text("Edit Profile", style: heading3Style,),
@@ -46,7 +47,10 @@ class EditProfileView extends StatelessWidget {
               },
               child: const Icon(Icons.arrow_back))
         ),
-        body: Padding(
+        body:
+        model.isBusy ? const Center(child: CircularProgressIndicator()) :
+
+        Padding(
 
           padding: EdgeInsets.symmetric(horizontal: 25.w),
           child: Column(
@@ -80,11 +84,6 @@ class EditProfileView extends StatelessWidget {
                 ),
               ),
               50.verticalSpace,
-              model.isBusy ? SizedBox(
-                height: 50.h,
-                child: const Center(child: CircularProgressIndicator()),
-              ) :
-
               Padding(
                 padding:  EdgeInsets.symmetric(horizontal: 100.w),
                 child:  CustomButton(mainButtonTitle: "Save", busy: false,

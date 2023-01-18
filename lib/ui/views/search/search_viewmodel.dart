@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:netflix_clone/app/app.router.dart';
 import 'package:stacked/stacked.dart';
+import 'package:stacked_services/stacked_services.dart';
 
 import '../../../app/app.locator.dart';
 import '../../../models/movie.dart';
@@ -14,7 +16,7 @@ class SearchViewModel extends StreamViewModel {
   TextEditingController get textEditingController => _textEditingController;
   String searchText = '';
 
-
+  final NavigationService _navigationService = locator<NavigationService>();
   final CurrentUserService _userService = locator<CurrentUserService>();
 
   final List<Movie> _movies = [];
@@ -65,5 +67,9 @@ class SearchViewModel extends StreamViewModel {
     return _userService.currentProfile!.assetImg;
   }
 
+  void playVideo(Movie movie){
+    FocusManager.instance.primaryFocus?.unfocus();
+    _navigationService.navigateToVideoPlayerScreenView(movieLink: movie.videoUrl);
+  }
 
 }

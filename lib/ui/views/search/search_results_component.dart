@@ -12,37 +12,43 @@ class SearchResultBody extends ViewModelWidget<SearchViewModel> {
   Widget build(BuildContext context,SearchViewModel viewModel) {
     return Expanded(
         child: ListView.builder(
+
             itemCount: viewModel.searchResultMovies.length,
             itemBuilder: (context,index){
-              return _buildSearchResultTile(viewModel.searchResultMovies[index]);
+              return _buildSearchResultTile(viewModel.searchResultMovies[index],viewModel);
             }));
   }
 
-  Widget _buildSearchResultTile(Movie movie){
-    return Container(
-      margin: EdgeInsets.only(bottom: 4.h),
-      color: Colors.grey[900],
-      child: Row(
-        children: [
-          Container(
-            height: 80.h,
-            width: 120.w,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(movie.imgUrl),
-                  fit: BoxFit.cover,
-                  alignment: Alignment.topCenter
+  Widget _buildSearchResultTile(Movie movie,SearchViewModel viewModel){
+    return GestureDetector(
+      onTap: (){
+        viewModel.playVideo(movie);
+      },
+      child: Container(
+        margin: EdgeInsets.only(bottom: 4.h),
+        color: Colors.grey[900],
+        child: Row(
+          children: [
+            Container(
+              height: 80.h,
+              width: 120.w,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: NetworkImage(movie.imgUrl),
+                    fit: BoxFit.cover,
+                    alignment: Alignment.topCenter
+                ),
+
               ),
-
             ),
-          ),
-          13.horizontalSpace,
-          Text(movie.title,),
-          const Spacer(),
-          Icon(Icons.play_circle_outline_rounded, color: Colors.white, size: 30.w,),
-          15.horizontalSpace,
+            13.horizontalSpace,
+            Text(movie.title,),
+            const Spacer(),
+            Icon(Icons.play_circle_outline_rounded, color: Colors.white, size: 30.w,),
+            15.horizontalSpace,
 
-        ],
+          ],
+        ),
       ),
     );
   }
